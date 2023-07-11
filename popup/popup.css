@@ -1,4 +1,9 @@
 body {
-  height: 256px;
+  height: 158px;
   width: 256px;
+}
+
+button {
+  text-align: center;
+  width: 100%;
 }
