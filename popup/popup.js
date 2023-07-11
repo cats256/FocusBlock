@@ -5,6 +5,11 @@ const addBlockedSite = (array, baseUrl) => {
     }
 };
 
+const removeBlockedSite = (array, baseUrl) => {
+    array = array.filter((element) => element !== baseUrl);
+    chrome.storage.local.set({ array });
+};
+
 chrome.storage.local.get(["array"]).then(async (result) => {
     const array = result.array;
     const body = document.querySelector("body");
@@ -20,6 +25,8 @@ chrome.storage.local.get(["array"]).then(async (result) => {
     const baseUrl = url.protocol + "//" + url.host;
 
     const addButton = document.getElementById("add-button");
+    const removeButton = document.getElementById("remove-button");
 
     addButton.addEventListener("click", () => addBlockedSite(array, baseUrl));
+    removeButton.addEventListener("click", () => removeBlockedSite(array, baseUrl));
 });
