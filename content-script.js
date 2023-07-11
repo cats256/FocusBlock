@@ -7,8 +7,8 @@ const generateHTML = (siteName) => {
   `;
 };
 
-let array = ["www.youtube.com", "www.facebook.com", "www.instagram.com"];
-
-if (array.includes(window.location.hostname)) {
-  document.body.innerHTML = generateHTML(window.location.hostname);
-}
+chrome.storage.local.get(["array"]).then((result) => {
+  if (result.array.includes(window.location.hostname)) {
+    document.body.innerHTML = generateHTML(window.location.hostname);
+  }
+});
