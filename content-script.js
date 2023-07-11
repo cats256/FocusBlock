@@ -8,7 +8,7 @@ const generateHTML = (siteName) => {
 };
 
 chrome.storage.local.get(["array"]).then((result) => {
-  if (result.array.includes(window.location.hostname)) {
-    document.body.innerHTML = generateHTML(window.location.hostname);
+  if (result.array.includes(window.location.origin)) {
+    document.body.innerHTML = generateHTML(window.location.origin);
   }
 });
