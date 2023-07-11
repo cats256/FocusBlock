@@ -15,3 +15,14 @@ addButton.addEventListener("click", () => {
         });
     });
 });
+
+const body = document.querySelector("body");
+
+chrome.storage.local.get(["array"]).then((result) => {
+    const array = result.array;
+    array.forEach((element) => {
+        const div = document.createElement("div");
+        div.textContent = element;
+        body.appendChild(div);
+    });
+});
