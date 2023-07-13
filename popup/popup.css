@@ -1,3 +1,12 @@
+@font-face {
+  font-family: "Inter";
+  src: url("../font/Inter-Regular.ttf") format("woff2");
+}
+
+* {
+  font-family: "Inter", sans-serif;
+}
+
 body {
   height: 158px;
   width: 256px;
