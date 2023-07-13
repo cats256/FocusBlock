@@ -27,7 +27,7 @@ focusBlock.attachShadow({ mode: "open" });
 const shadowRoot = focusBlock.shadowRoot;
 shadowRoot.innerHTML = `
   <p style="font-size: 32px">This site has been blocked by FocusBlock.</p>
-  <img src="icons/lotus-icon.svg" width="200px" height="200px" />
+  <img src="../icons/lotus.svg" width="200px" height="200px" />
   <br />
   <p id="quote">Life begins at the end of your comfort zone.</p>
   <div>
