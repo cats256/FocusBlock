@@ -18,5 +18,11 @@
       "js": ["content/content-script.js"]
     }
   ],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/lotus.svg"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "permissions": ["storage", "activeTab"]
 }
