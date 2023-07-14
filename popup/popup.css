@@ -8,11 +8,15 @@
 }
 
 body {
-  height: 158px;
-  width: 256px;
+  height: 480px;
+  width: 300px;
 }
 
 button {
   text-align: center;
   width: 100%;
+}
+
+.material-symbols-outlined {
+  font-size: 32px;
 }
