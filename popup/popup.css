@@ -1,22 +1,71 @@
-@font-face {
-  font-family: "Inter";
-  src: url("../font/Inter-Regular.ttf") format("woff2");
-}
-
 * {
   font-family: "Inter", sans-serif;
 }
 
-body {
+:root {
   height: 480px;
   width: 300px;
+  background-color: rgb(255, 255, 255);
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+}
+
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0px;
+  border: 0;
 }
 
 button {
   text-align: center;
   width: 100%;
+  background-color: rgb(235, 235, 235);
+  border: transparent;
+  border-radius: 6px;
+}
+
+#button-container > button {
+  height: 100%;
 }
 
 .material-symbols-outlined {
-  font-size: 32px;
+  font-size: 24px;
+}
+
+#focus-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  height: 60px;
+  text-align: center;
+  font-size: 20px;
+}
+
+#focus-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-grow: 1;
+}
+
+#focus-mode > button {
+  width: 240px;
+  height: 32px;
+  border: 1px solid rgb(150, 150, 150);
+  border-radius: 4px;
+}
+
+#button-container {
+  display: flex;
+  gap: 10px;
+  margin: 0px;
+  margin-top: auto;
+  height: 48px;
+  padding: 10px;
 }
