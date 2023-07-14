@@ -2,14 +2,10 @@ chrome.storage.local.get(["array"]).then((result) => {
   if (result.array.includes(window.location.origin)) {
     const body = document.querySelector("body");
     body.innerHTML = `
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
       <style>
-        @font-face {
-          font-family: 'Inter';
-          src: url(${chrome.runtime.getURL(
-            "../font/Inter-Regular.ttf"
-          )}) format('woff2');
-        }
-
         body,
         :root {
           all: initial !important;
