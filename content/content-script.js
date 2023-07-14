@@ -1,5 +1,5 @@
-chrome.storage.local.get(["array"]).then((result) => {
-  if (result.array.includes(window.location.origin)) {
+chrome.storage.local.get(["blockedSites"]).then((storage) => {
+  if (storage.blockedSites.includes(window.location.origin)) {
     const body = document.querySelector("body");
     body.innerHTML = `
       <link rel="preconnect" href="https://fonts.googleapis.com">

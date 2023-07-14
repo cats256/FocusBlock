@@ -1,2 +1,6 @@
-const result = await chrome.storage.local.get();
-if (!result.array) chrome.storage.local.set({ array: [] });
+chrome.storage.local.clear();
+chrome.storage.local.get().then((storage) => {
+  if (!storage.blockedSites) {
+    chrome.storage.local.set({ blockedSites: [] });
+  }
+});
