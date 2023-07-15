@@ -62,11 +62,13 @@ chrome.storage.local.get(["blockedSites"]).then((storage) => {
         }
       </style>
       <div id="panel">
-        <p style="font-size: 28px">This site has been blocked by FocusBlock.</p>
+        <p style="font-size: 28px">This site has been blocked by FocusBlock</p>
         <img src=${chrome.runtime.getURL(
           "../icons/lotus.svg"
         )} width="200px" height="200px" />
-        <p id="quote" style="font-size: 20px; margin-top: 36px" >Life begins at the end of your comfort zone.</p>
+        <p id="quote" style="font-family: 'Inter'; font-size: 24px; margin-top: 36px; font-variant: small-caps" >
+          life begins at the end of your comfort zone
+        </p>
         <div id="button-container">
           <button id="setting">Settings</button>
           <button>+3 minute</button>
