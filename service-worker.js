@@ -1,4 +1,3 @@
-chrome.storage.local.clear();
 chrome.storage.local.get().then((storage) => {
   if (!storage.blockedSites) {
     chrome.storage.local.set({ blockedSites: [] });
@@ -9,7 +8,7 @@ chrome.storage.local.get().then((storage) => {
   }
 });
 
-const timer = () => async () => {
+const timer = async () => {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   if (tabs.length !== 0) {
     let url = new URL(tabs[0].url);
@@ -25,4 +24,4 @@ const timer = () => async () => {
     chrome.storage.local.set({ tabsTime });
   }
 };
-setInterval(timer(), 1000);
+setInterval(timer, 1000);
