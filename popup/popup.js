@@ -30,18 +30,23 @@ const baseUrl = url.protocol + "//" + url.host;
 const focusMode = document.getElementById("focus-mode");
 
 const focusToggle = document.getElementById("focus-mode-toggle");
-const focusModeToggle = storage.focusModeToggle;
+let focusModeToggle = storage.focusModeToggle;
+
 if (focusModeToggle) {
   focusToggle.textContent = "Disable Focus Mode";
-  focusToggle.addEventListener("click", () => {
-    chrome.storage.local.set({ focusModeToggle: false });
-  });
 } else {
   focusToggle.textContent = "Enable Focus Mode";
-  focusToggle.addEventListener("click", () => {
-    chrome.storage.local.set({ focusModeToggle: true });
-  });
 }
+
+focusToggle.addEventListener("click", () => {
+  if (focusModeToggle) {
+    focusToggle.textContent = "Enable Focus Mode";
+  } else {
+    focusToggle.textContent = "Disable Focus Mode";
+  }
+  focusModeToggle = !focusModeToggle;
+  chrome.storage.local.set({ focusModeToggle });
+});
 
 const blockSiteToggle = document.getElementById("site-toggle");
 if (blockedSites.includes(baseUrl)) {
