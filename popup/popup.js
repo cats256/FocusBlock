@@ -10,8 +10,8 @@ const removeBlockedSite = (blockedSites, baseUrl) => {
   chrome.storage.local.set({ blockedSites });
 };
 
-const body = document.querySelector("body");
 const storage = await chrome.storage.local.get();
+const body = document.querySelector("body");
 
 const blockedSites = storage.blockedSites;
 blockedSites.forEach((element) => {
@@ -27,21 +27,31 @@ const tabs = await chrome.tabs.query({
 const url = new URL(tabs[0].url);
 const baseUrl = url.protocol + "//" + url.host;
 
-const addButton = document.createElement("button");
-const removeButton = document.createElement("button");
-
-addButton.addEventListener("click", () =>
-  addBlockedSite(blockedSites, baseUrl)
-);
-removeButton.addEventListener("click", () =>
-  removeBlockedSite(blockedSites, baseUrl)
-);
-
 const focusMode = document.getElementById("focus-mode");
-if (blockedSites.includes(baseUrl)) {
-  removeButton.textContent = "Remove From Blocklist";
-  focusMode.appendChild(removeButton);
+
+const focusToggle = document.getElementById("focus-mode-toggle");
+const focusModeToggle = storage.focusModeToggle;
+if (focusModeToggle) {
+  focusToggle.textContent = "Disable Focus Mode";
+  focusToggle.addEventListener("click", () => {
+    chrome.storage.local.set({ focusModeToggle: false });
+  });
 } else {
-  addButton.textContent = "Add To Blocklist";
-  focusMode.appendChild(addButton);
+  focusToggle.textContent = "Enable Focus Mode";
+  focusToggle.addEventListener("click", () => {
+    chrome.storage.local.set({ focusModeToggle: true });
+  });
+}
+
+const blockSiteToggle = document.getElementById("site-toggle");
+if (blockedSites.includes(baseUrl)) {
+  blockSiteToggle.textContent = "Remove From Blocklist";
+  blockSiteToggle.addEventListener("click", () =>
+    removeBlockedSite(blockedSites, baseUrl)
+  );
+} else {
+  blockSiteToggle.textContent = "Add To Blocklist";
+  blockSiteToggle.addEventListener("click", () =>
+    addBlockedSite(blockedSites, baseUrl)
+  );
 }
