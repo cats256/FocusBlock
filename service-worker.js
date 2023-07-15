@@ -1,3 +1,4 @@
+chrome.storage.local.clear();
 chrome.storage.local.get().then((storage) => {
   if (!storage.blockedSites) {
     chrome.storage.local.set({ blockedSites: [] });
@@ -6,43 +7,22 @@ chrome.storage.local.get().then((storage) => {
   if (!storage.tabsTime) {
     chrome.storage.local.set({ tabsTime: {} });
   }
-
-  if (!storage.activeTab) {
-    chrome.storage.local.set({
-      activeTab: {
-        url: null,
-        startTime: null,
-      },
-    });
-  }
 });
 
-chrome.tabs.onActivated.addListener(async () => {
-  const currentTime = new Date().getTime();
-  const storage = await chrome.storage.local.get();
-  const lastActiveTab = storage.activeTab.url;
+const timer = () => async () => {
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (tabs.length !== 0) {
+    let url = new URL(tabs[0].url);
+    url = url.host.replace('www.', '');
 
-  if (lastActiveTab) {
-    if (storage.tabsTime[lastActiveTab]) {
-      storage.tabsTime[lastActiveTab] +=
-        currentTime - storage.activeTab.startTime;
+    const { tabsTime } = await chrome.storage.local.get();
+    if (tabsTime[url]) {
+      tabsTime[url] += 1000;
     } else {
-      storage.tabsTime[lastActiveTab] =
-        currentTime - storage.activeTab.startTime;
+      tabsTime[url] = 1000;
     }
-    chrome.storage.local.set({ tabsTime: storage.tabsTime });
+
+    chrome.storage.local.set({ tabsTime });
   }
-
-  const tabs = await chrome.tabs.query({
-    active: true,
-    currentWindow: true,
-  });
-  let url = new URL(tabs[0].url);
-  url = url.host.replace("www.", "");
-
-  chrome.storage.local.set({
-    activeTab: { url, startTime: currentTime },
-  });
-});
-
-// chrome.tabs.onRemoved.addListener(async () => {});
+};
+setInterval(timer(), 1000);
