@@ -27,36 +27,34 @@ const tabs = await chrome.tabs.query({
 const url = new URL(tabs[0].url);
 const baseUrl = url.protocol + "//" + url.host;
 
-const focusMode = document.getElementById("focus-mode");
+const focusToggle = document.getElementById("focus-toggle");
+let focusMode = storage.focusModeToggle;
 
-const focusToggle = document.getElementById("focus-mode-toggle");
-let focusModeToggle = storage.focusModeToggle;
-
-if (focusModeToggle) {
+if (focusMode) {
   focusToggle.textContent = "Disable Focus Mode";
 } else {
   focusToggle.textContent = "Enable Focus Mode";
 }
 
 focusToggle.addEventListener("click", () => {
-  if (focusModeToggle) {
+  if (focusMode) {
     focusToggle.textContent = "Enable Focus Mode";
   } else {
     focusToggle.textContent = "Disable Focus Mode";
   }
-  focusModeToggle = !focusModeToggle;
-  chrome.storage.local.set({ focusModeToggle });
+  focusMode = !focusMode;
+  chrome.storage.local.set({ focusModeToggle: focusMode });
 });
 
-const blockSiteToggle = document.getElementById("site-toggle");
+const siteToggle = document.getElementById("site-toggle");
 if (blockedSites.includes(baseUrl)) {
-  blockSiteToggle.textContent = "Remove From Blocklist";
-  blockSiteToggle.addEventListener("click", () =>
+  siteToggle.textContent = "Remove From Blocklist";
+  siteToggle.addEventListener("click", () =>
     removeBlockedSite(blockedSites, baseUrl)
   );
 } else {
-  blockSiteToggle.textContent = "Add To Blocklist";
-  blockSiteToggle.addEventListener("click", () =>
+  siteToggle.textContent = "Add To Blocklist";
+  siteToggle.addEventListener("click", () =>
     addBlockedSite(blockedSites, baseUrl)
   );
 }

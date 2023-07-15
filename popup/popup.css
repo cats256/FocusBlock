@@ -46,7 +46,7 @@ button {
   font-size: 20px;
 }
 
-#focus-mode {
+#focus-tab {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -54,7 +54,7 @@ button {
   flex-grow: 1;
 }
 
-#focus-mode > button {
+#focus-tab > button {
   width: 240px;
   height: 32px;
   border: 1px solid rgb(150, 150, 150);
