@@ -7,7 +7,8 @@
     "128": "icons/icon.png"
   },
   "background": {
-    "service_worker": "service-worker.js"
+    "service_worker": "service-worker.js",
+    "type": "module"
   },
   "action": {
     "default_popup": "popup/popup.html"
@@ -24,5 +25,5 @@
       "matches": ["<all_urls>"]
     }
   ],
-  "permissions": ["storage", "activeTab"]
+  "permissions": ["storage", "tabs"]
 }
