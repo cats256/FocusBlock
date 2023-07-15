@@ -10,16 +10,9 @@ const removeBlockedSite = (blockedSites, baseUrl) => {
 
 const storage = await chrome.storage.local.get();
 const body = document.querySelector("body");
-
+const focusToggle = document.getElementById("focus-toggle");
 let blockedSites = storage.blockedSites;
 let focusMode = storage.focusModeToggle;
-blockedSites.forEach((element) => {
-  const div = document.createElement("div");
-  div.textContent = element;
-  body.appendChild(div);
-});
-
-const focusToggle = document.getElementById("focus-toggle");
 
 if (focusMode) {
   focusToggle.textContent = "Disable Focus Mode";
@@ -61,3 +54,18 @@ siteToggle.addEventListener("click", () => {
   }
   chrome.storage.local.set({ blockedSites });
 });
+
+if (blockedSites.length !== 0) {
+  const blockListPanel = document.createElement("div");
+  const focusTab = document.getElementById("focus-tab");
+
+  focusTab.appendChild(blockListPanel);
+  blockListPanel.id = "block-list-panel";
+  blockedSites.forEach((element) => {
+    const div = document.createElement("div");
+    const url = new URL(element);
+
+    div.textContent = url.host.replace("www.", "");
+    blockListPanel.appendChild(div);
+  });
+}

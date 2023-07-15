@@ -3,7 +3,7 @@
 }
 
 :root {
-  height: 480px;
+  height: 492px;
   width: 300px;
   background-color: rgb(255, 255, 255);
   margin: 0px;
@@ -15,9 +15,9 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  margin: 0;
+  margin: 0px;
   padding: 0px;
-  border: 0;
+  border: 0px;
 }
 
 button {
@@ -54,11 +54,24 @@ button {
   flex-grow: 1;
 }
 
+#block-list-panel,
 #focus-tab > button {
   width: 240px;
-  height: 32px;
-  border: 1px solid rgb(150, 150, 150);
   border-radius: 4px;
+  font-size: 12px;
+}
+
+#focus-tab > button {
+  height: 32px;
+}
+
+#block-list-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0px;
+  background-color: rgb(245, 245, 245);
 }
 
 #button-container {
@@ -68,4 +81,21 @@ button {
   margin-top: auto;
   height: 48px;
   padding: 10px;
+}
+
+#block-list-panel {
+  height: 160px;
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 20px;
+  border: transparent;
 }
