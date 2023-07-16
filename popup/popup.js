@@ -44,16 +44,16 @@ siteToggle.addEventListener('click', () => {
 const siteTodayUsage = document.getElementById('site-today-usage');
 const tab = url.host.replace('www.', '');
 if (tab in storage.tabsTime) {
-  const hours = Math.floor(storage.tabsTime[tab] / 3600);
-  const minutes = Math.floor((storage.tabsTime[tab] % 3600) / 60);
+  const hours = Math.floor(storage.tabsTime[tab] / 3600000);
+  const minutes = Math.floor((storage.tabsTime[tab] % 3600000) / 60000);
 
   siteTodayUsage.textContent = `This Site: ${hours} ${hours === 0 ? 'hr' : 'hrs'} ${minutes} ${minutes === 0 ? 'min' : 'mins'}`;
 }
 
 const sitesTodayUsage = document.getElementById('sites-today-usage');
 const sitesTodaySeconds = Object.values(storage.tabsTime).reduce((acc, curr) => acc + curr, 0);
-const hours = Math.floor(sitesTodaySeconds / 3600);
-const minutes = Math.floor((sitesTodaySeconds % 3600) / 60);
+const hours = Math.floor(sitesTodaySeconds / 3600000);
+const minutes = Math.floor((sitesTodaySeconds % 3600000) / 60000);
 
 sitesTodayUsage.textContent = `All Sites: ${hours} ${hours === 0 ? 'hr' : 'hrs'} ${minutes} ${minutes === 0 ? 'min' : 'mins'}`;
 
