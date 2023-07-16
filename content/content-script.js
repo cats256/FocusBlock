@@ -1,20 +1,20 @@
 let tabStartTime = Date.now();
+const url = new URL(window.location.origin);
+const domain = url.host.replace('www.', '');
 
-document.addEventListener('visibilitychange', async () => {
-  const url = new URL(window.location.origin);
-  const domain = url.host.replace('www.', '');
-  if (!document.hidden) {
-    tabStartTime = Date.now();
+window.addEventListener('focus', () => {
+  tabStartTime = Date.now();
+});
+
+window.addEventListener('blur', async () => {
+  const { tabsTime } = await chrome.storage.local.get();
+
+  if (tabsTime[domain]) {
+    tabsTime[domain] += Date.now() - tabStartTime;
   } else {
-    const { tabsTime } = await chrome.storage.local.get();
-
-    if (tabsTime[domain]) {
-      tabsTime[domain] += Date.now() - tabStartTime;
-    } else {
-      tabsTime[domain] = Date.now() - tabStartTime;
-    }
-    chrome.storage.local.set({ tabsTime });
+    tabsTime[domain] = Date.now() - tabStartTime;
   }
+  chrome.storage.local.set({ tabsTime });
 });
 
 chrome.storage.local.get(['blockedSites']).then((storage) => {
