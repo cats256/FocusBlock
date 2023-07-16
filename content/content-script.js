@@ -1,8 +1,8 @@
 let tabStartTime = Date.now();
 
-document.addEventListener('visibilitychange', async () => {
+document.addEventListener("visibilitychange", async () => {
   const url = new URL(window.location.origin);
-  const domain = url.host.replace('www.', '');
+  const domain = url.host.replace("www.", "");
   if (!document.hidden) {
     tabStartTime = Date.now();
   } else {
@@ -17,9 +17,9 @@ document.addEventListener('visibilitychange', async () => {
   }
 });
 
-chrome.storage.local.get(['blockedSites']).then((storage) => {
+chrome.storage.local.get(["blockedSites"]).then((storage) => {
   if (storage.blockedSites.includes(window.location.origin)) {
-    const body = document.querySelector('body');
+    const body = document.querySelector("body");
     body.innerHTML = `
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,8 +33,8 @@ chrome.storage.local.get(['blockedSites']).then((storage) => {
       <div id="focus-block"></div>
     `;
 
-    const focusBlock = body.querySelector('#focus-block');
-    focusBlock.attachShadow({ mode: 'open' });
+    const focusBlock = body.querySelector("#focus-block");
+    focusBlock.attachShadow({ mode: "open" });
 
     const { shadowRoot } = focusBlock;
     shadowRoot.innerHTML = `
@@ -84,7 +84,7 @@ chrome.storage.local.get(['blockedSites']).then((storage) => {
       </style>
       <div id="panel">
         <p style="font-size: 28px">This site has been blocked by FocusBlock</p>
-        <img src=${chrome.runtime.getURL('../icons/lotus.svg')} width="200px" height="200px" />
+        <img src=${chrome.runtime.getURL("../icons/lotus.svg")} width="200px" height="200px" />
         <p id="quote" style="font-family: 'Inter'; font-size: 24px; margin-top: 36px; font-variant: small-caps" >
           life begins at the end of your comfort zone
         </p>
