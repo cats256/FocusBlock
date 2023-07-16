@@ -1,3 +1,22 @@
+let tabStartTime = Date.now();
+
+document.addEventListener('visibilitychange', async () => {
+  const url = new URL(window.location.origin);
+  const domain = url.host.replace('www.', '');
+  if (!document.hidden) {
+    tabStartTime = Date.now();
+  } else {
+    const { tabsTime } = await chrome.storage.local.get();
+
+    if (tabsTime[domain]) {
+      tabsTime[domain] += Date.now() - tabStartTime;
+    } else {
+      tabsTime[domain] = Date.now() - tabStartTime;
+    }
+    chrome.storage.local.set({ tabsTime });
+  }
+});
+
 chrome.storage.local.get(['blockedSites']).then((storage) => {
   if (storage.blockedSites.includes(window.location.origin)) {
     const body = document.querySelector('body');
