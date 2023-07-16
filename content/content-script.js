@@ -74,24 +74,35 @@ chrome.storage.local.get(['blockedSites']).then((storage) => {
           background-color: rgb(241, 241, 241);
           border: 1px solid rgb(150, 150, 150);
           color: black;
-          box-sizing: border-box;
           font-family: "Inter";
           font-weight: 500;
           text-align: center;
-          cursor: pointer;
         }
+
+        #blocked {
+          font-size: 28px;
+        }
+        
+        #icon {
+          width: 200px;
+          height: 200px;
+        }
+
+        #quote {
+          font-size: 24px;
+          margin-top: 36px;
+          font-variant: small-caps;
+        }    
 
         #button-container {
           display: flex;
           gap: 16px;
-        }
+        }    
       </style>
       <div id="panel">
-        <p style="font-size: 28px">This site has been blocked by FocusBlock</p>
-        <img src=${chrome.runtime.getURL('../icons/lotus.svg')} width="200px" height="200px" />
-        <p id="quote" style="font-family: 'Inter'; font-size: 24px; margin-top: 36px; font-variant: small-caps" >
-          life begins at the end of your comfort zone
-        </p>
+        <p id="blocked">This site has been blocked by FocusBlock</p>
+        <img id="icon" src=${chrome.runtime.getURL('../icons/lotus.svg')} />
+        <p id="quote">life begins at the end of your comfort zone</p>
         <div id="button-container">
           <button id="setting">Settings</button>
           <button>+3 minute</button>
