@@ -24,3 +24,14 @@ chrome.storage.local.get(["array"]).then((result) => {
 // }
 
 // console.log(storage);
+
+// chrome.storage.local.set({
+//   tabsTime: {
+//     'chat.openai.com': 314000,
+//     'developer.mozilla.org': 45000,
+//     'discord.com': 538000,
+//     'github.com': 175000,
+//     'google.com': 24000,
+//     'stackoverflow.com': 41000,
+//   },
+// });
