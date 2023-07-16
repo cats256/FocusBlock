@@ -7,14 +7,20 @@ window.addEventListener('focus', () => {
 });
 
 window.addEventListener('blur', async () => {
-  const { tabsTime } = await chrome.storage.local.get();
+  try {
+    const { tabsTime } = await chrome.storage.local.get();
 
-  if (tabsTime[domain]) {
-    tabsTime[domain] += Date.now() - tabStartTime;
-  } else {
-    tabsTime[domain] = Date.now() - tabStartTime;
+    if (tabsTime[domain]) {
+      tabsTime[domain] += Date.now() - tabStartTime;
+    } else {
+      tabsTime[domain] = Date.now() - tabStartTime;
+    }
+
+    await chrome.storage.local.set({ tabsTime });
+    chrome.runtime.sendMessage(null);
+  } catch (error) {
+    console.error('Error accessing chrome.storage.local:', error);
   }
-  chrome.storage.local.set({ tabsTime });
 });
 
 chrome.storage.local.get(['blockedSites']).then((storage) => {
@@ -35,9 +41,7 @@ chrome.storage.local.get(['blockedSites']).then((storage) => {
 
     const focusBlock = body.querySelector('#focus-block');
     focusBlock.attachShadow({ mode: 'open' });
-
-    const { shadowRoot } = focusBlock;
-    shadowRoot.innerHTML = `
+    focusBlock.shadowRoot.innerHTML = `
       <style>
         :host {
           font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
