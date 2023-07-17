@@ -1,3 +1,11 @@
+let storage;
+
+const getStorage = async () => {
+  storage = await chrome.storage.local.get();
+};
+
+getStorage();
+
 // back home
 const back_button = document.getElementById("back");
 back_button.addEventListener("click", () => {
@@ -6,7 +14,9 @@ back_button.addEventListener("click", () => {
 
 // pomodoro functions
 const getTime = (end) => {
-  const time_diff = end - Date.parse(new Date());
+  const start = Date.parse(new Date());
+  const time_diff = end - start;
+  console.log(`time diff: ${time_diff}`);
 
   const total = Number.parseInt(time_diff / 1000, 10);
   const minutes = Number.parseInt((total / 60) % 60, 10);
@@ -20,32 +30,77 @@ const getTime = (end) => {
 };
 
 // start pomodoro timer
-let FOCUS_TIME = 2;
+let FOCUS_TIME = 25;
 let BREAK_TIME = 5;
 let CYCLES = 1;
 
 let pomodoro_interval;
 
+// pomodoro dict
+let pomodoro_info = {
+  started: false,
+  cycles: CYCLES,
+  focus_time: FOCUS_TIME,
+  break_time: BREAK_TIME,
+  timer_info: {},
+  end_time: null,
+  start_time: null,
+};
+
 document.getElementById("start").addEventListener("click", () => {
-  const end = Date.parse(new Date()) + FOCUS_TIME * 1000;
-  let time_string = `${FOCUS_TIME}:${0}`;
+  if (!pomodoro_info.started) {
+    pomodoro_info.started = true;
+    pomodoro_info.cycles = CYCLES;
+    pomodoro_info.focus_time = FOCUS_TIME;
+    pomodoro_info.break_time = BREAK_TIME;
+    pomodoro_info.end_time = Date.parse(new Date()) + pomodoro_info.focus_time * 60000;
+    pomodoro_info.start_time = Date.parse(new Date());
+  }
+
+  const minutes = `${pomodoro_info.focus_time}`.padStart(2, "0");
+  const seconds = `${0}`.padStart(2, "0");
+
+  let time_string = `${minutes}:${seconds}`;
   document.getElementById("clock").textContent = time_string;
 
-  pomodoro_interval = setInterval(async () => {
-    let time_remaining = getTime(end);
-    chrome.storage.local.set({ time_remaining: time_remaining });
-    let storage = await chrome.storage.local.get();
-    console.log(storage);
-    if (time_remaining <= 0) {
+  console.log(pomodoro_info);
+});
+
+console.log("started");
+if (pomodoro_info.cycles == 0) {
+  alert("Invalid number of cycles");
+  pomodoro_info.started = false;
+
+  chrome.storage.local.set({ pomodoro_info: pomodoro_info });
+}
+
+pomodoro_interval = setInterval(async () => {
+  const time_remaining = getTime(pomodoro_info.end_time);
+  console.log(time_remaining);
+  pomodoro_info.timer_info = time_remaining;
+
+  // chrome.storage.local.set({ pomodoro_info: pomodoro_info });
+
+  if (time_remaining.total <= 0) {
+    console.log("done");
+    pomodoro_info.cycles--;
+    // clear interval if theres no cycles left
+    if (pomodoro_info.cycles == 0) {
       clearInterval(pomodoro_interval);
-      alert("Timer ended");
-      CYCLES--;
     }
 
-    const minutes = `${time_remaining.minutes}`.padStart(2, "0");
-    const seconds = `${time_remaining.seconds}`.padStart(2, "0");
+    // set new end time
+    // pomodoro_info.start_time = Date.parse(new Date());
+    pomodoro_info.end_time = Date.parse(new Date()) + pomodoro_info.focus_time * 60000;
 
-    let time_string = `${minutes}:${seconds}`;
-    document.getElementById("clock").textContent = time_string;
-  }, 1000);
-});
+    chrome.storage.local.set({ pomodoro_info: pomodoro_info });
+  }
+
+  const minutes = `${time_remaining.minutes}`.padStart(2, "0");
+  const seconds = `${time_remaining.seconds}`.padStart(2, "0");
+
+  let time_string = `${minutes}:${seconds}`;
+  document.getElementById("clock").textContent = time_string;
+
+  // pomodoro_info.start_time = Date.parse(new Date());
+}, 1000);

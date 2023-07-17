@@ -11,7 +11,7 @@
     "type": "module"
   },
   "action": {
-    "default_popup": "popup/popup.html"
+    "default_popup": "popup/pomodoro/pomodoro.html"
   },
   "content_scripts": [
     {
