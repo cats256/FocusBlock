@@ -25,13 +25,22 @@ body {
 button {
   text-align: center;
   width: 100%;
-  background-color: rgb(235, 235, 235);
+  background-color: rgb(240, 240, 240);
   border: transparent;
   border-radius: 6px;
 }
 
+button:hover {
+  background-color: rgb(205, 205, 205);
+}
+
 #button-container > button {
   height: 100%;
+  background-color: initial;
+}
+
+#button-container > button:hover {
+  background-color: rgb(225, 225, 225);
 }
 
 .material-symbols-outlined {
@@ -52,7 +61,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-grow: 1;
 }
 
@@ -61,6 +70,7 @@ button {
   width: 240px;
   border-radius: 4px;
   font-size: 12px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
 }
 
 #focus-tab > button {
@@ -83,21 +93,10 @@ button {
   margin-top: auto;
   height: 48px;
   padding: 10px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 16px;
 }
 
 #block-list-panel {
   height: 160px;
   overflow-y: scroll;
-}
-
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background-color: rgba(155, 155, 155, 0.5);
-  border-radius: 20px;
-  border: transparent;
 }
