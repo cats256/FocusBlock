@@ -4,11 +4,11 @@ chrome.runtime.onMessage.addListener(async () => {
   const baseUrl = `${url.protocol}//${url.host}`;
   const domain = url.host.replace('www.', '');
 
-  const storage = await chrome.storage.local.get();
   const focusToggle = document.getElementById('focus-toggle');
   const siteToggle = document.getElementById('site-toggle');
   const siteTodayUsage = document.getElementById('site-today-usage');
   const sitesTodayUsage = document.getElementById('sites-today-usage');
+  const storage = await chrome.storage.local.get();
 
   let { focusMode, blockedSites } = storage;
 
