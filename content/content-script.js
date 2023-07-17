@@ -25,7 +25,7 @@ chrome.storage.local.get(['blockedSites']).then(async (storage) => {
 
     content.head.appendChild(title);
     CSS.href = chrome.runtime.getURL('content/content.css');
-    icon.src = `${chrome.runtime.getURL('icons/lotus.svg')}`;
+    icon.src = chrome.runtime.getURL('icons/lotus.svg');
     document.replaceChild(content.documentElement, document.documentElement);
   }
 });
