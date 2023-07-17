@@ -1,22 +1,23 @@
-let storage;
+var pomodoro_information;
 
-const getStorage = async () => {
-  storage = await chrome.storage.local.get();
+const reset = () => {
+  let pomodoro_information = {
+    started: false,
+    focus: true,
+    break: false,
+    focus_time: 1,
+    break_time: 1,
+    cycles: 1,
+    end_time: null,
+    start_time: null,
+  };
+  chrome.storage.local.set({ pomodoro_info: pomodoro_information });
+  document.getElementById("clock").textContent = `00:00`;
 };
 
-getStorage();
-
-// back home
-const back_button = document.getElementById("back");
-back_button.addEventListener("click", () => {
-  document.location.href = "../popup.html";
-});
-
-// pomodoro functions
-const getTime = (end) => {
-  const start = Date.parse(new Date());
-  const time_diff = end - start;
-  console.log(`time diff: ${time_diff}`);
+const get_time_difference = (end_time) => {
+  const start_time = Date.now();
+  const time_diff = end_time - start_time;
 
   const total = Number.parseInt(time_diff / 1000, 10);
   const minutes = Number.parseInt((total / 60) % 60, 10);
@@ -29,78 +30,92 @@ const getTime = (end) => {
   };
 };
 
-// start pomodoro timer
-let FOCUS_TIME = 25;
-let BREAK_TIME = 5;
-let CYCLES = 1;
-
-let pomodoro_interval;
-
-// pomodoro dict
-let pomodoro_info = {
-  started: false,
-  cycles: CYCLES,
-  focus_time: FOCUS_TIME,
-  break_time: BREAK_TIME,
-  timer_info: {},
-  end_time: null,
-  start_time: null,
+const check_finished = () => {
+  if (pomodoro_information.cycles <= 0) {
+    clearInterval(pomodoro_timer);
+    reset();
+  }
 };
 
-document.getElementById("start").addEventListener("click", () => {
-  if (!pomodoro_info.started) {
-    pomodoro_info.started = true;
-    pomodoro_info.cycles = CYCLES;
-    pomodoro_info.focus_time = FOCUS_TIME;
-    pomodoro_info.break_time = BREAK_TIME;
-    pomodoro_info.end_time = Date.parse(new Date()) + pomodoro_info.focus_time * 60000;
-    pomodoro_info.start_time = Date.parse(new Date());
-  }
+const change_time = () => {
+  let { total, minutes, seconds } = get_time_difference(pomodoro_information.end_time);
+  minutes = `${minutes}`.padStart(2, "0");
+  seconds = `${seconds}`.padStart(2, "0");
 
-  const minutes = `${pomodoro_info.focus_time}`.padStart(2, "0");
-  const seconds = `${0}`.padStart(2, "0");
+  if (total <= 0) {
+    console.log(pomodoro_information.cycles);
 
-  let time_string = `${minutes}:${seconds}`;
-  document.getElementById("clock").textContent = time_string;
-
-  console.log(pomodoro_info);
-});
-
-console.log("started");
-if (pomodoro_info.cycles == 0) {
-  alert("Invalid number of cycles");
-  pomodoro_info.started = false;
-
-  chrome.storage.local.set({ pomodoro_info: pomodoro_info });
-}
-
-pomodoro_interval = setInterval(async () => {
-  const time_remaining = getTime(pomodoro_info.end_time);
-  console.log(time_remaining);
-  pomodoro_info.timer_info = time_remaining;
-
-  // chrome.storage.local.set({ pomodoro_info: pomodoro_info });
-
-  if (time_remaining.total <= 0) {
-    console.log("done");
-    pomodoro_info.cycles--;
-    // clear interval if theres no cycles left
-    if (pomodoro_info.cycles == 0) {
-      clearInterval(pomodoro_interval);
+    if (pomodoro_information.focus) {
+      pomodoro_information.start_time = Date.now();
+      pomodoro_information.end_time = pomodoro_information.start_time + pomodoro_information.focus_time * 60 * 1000;
+      pomodoro_information.focus = false;
+      pomodoro_information.break = true;
+      document.getElementById("type").textContent = "Break Time";
+    } else if (pomodoro_information.break) {
+      pomodoro_information.start_time = Date.now();
+      pomodoro_information.end_time = pomodoro_information.start_time + pomodoro_information.break_time * 60 * 1000;
+      pomodoro_information.focus = true;
+      pomodoro_information.break = false;
+      pomodoro_information.cycles -= 1;
+      document.getElementById("type").textContent = "Focus Time";
     }
-
-    // set new end time
-    // pomodoro_info.start_time = Date.parse(new Date());
-    pomodoro_info.end_time = Date.parse(new Date()) + pomodoro_info.focus_time * 60000;
-
-    chrome.storage.local.set({ pomodoro_info: pomodoro_info });
   }
 
-  const minutes = `${time_remaining.minutes}`.padStart(2, "0");
-  const seconds = `${time_remaining.seconds}`.padStart(2, "0");
+  document.getElementById("clock").textContent = `${minutes}:${seconds}`;
+  chrome.storage.local.set({ pomodoro_info: pomodoro_information });
+  check_finished();
+};
 
-  let time_string = `${minutes}:${seconds}`;
-  document.getElementById("clock").textContent = time_string;
+const start_pomodoro = (resume = false) => {
+  pomodoro_information.start_time = Date.now();
 
-  // pomodoro_info.start_time = Date.parse(new Date());
-}, 1000);
+  if (!resume) {
+    if (pomodoro_information.focus) {
+      pomodoro_information.end_time = pomodoro_information.start_time + pomodoro_information.focus_time * 60 * 1000;
+    } else if (pomodoro_information.break) {
+      pomodoro_information.end_time = pomodoro_information.start_time + pomodoro_information.break_time * 60 * 1000;
+    }
+  }
+
+  pomodoro_timer = setInterval(change_time, 1000);
+};
+
+const onGot = (result) => {
+  pomodoro_information = result.pomodoro_info || {
+    started: false,
+    focus: true,
+    break: false,
+    focus_time: 1,
+    break_time: 1,
+    cycles: 1,
+    end_time: null,
+    start_time: null,
+  };
+
+  if (pomodoro_information.started) {
+    start_pomodoro(true);
+  }
+};
+
+const onError = (error) => {
+  console.log(error);
+};
+
+const storage = chrome.storage.local.get();
+storage.then(onGot, onError);
+
+document.getElementById("start").addEventListener("click", () => {
+  pomodoro_information = {
+    started: false,
+    focus: true,
+    break: false,
+    focus_time: 0.3,
+    break_time: 0.1,
+    cycles: 1,
+    end_time: null,
+    start_time: null,
+  };
+
+  pomodoro_information.started = true;
+  start_pomodoro();
+});
