@@ -8,12 +8,7 @@ window.addEventListener('focus', () => {
 
 window.addEventListener('blur', async () => {
   const { tabsTime } = await chrome.storage.local.get();
-
-  if (tabsTime[domain]) {
-    tabsTime[domain] += Date.now() - tabStartTime;
-  } else {
-    tabsTime[domain] = Date.now() - tabStartTime;
-  }
+  tabsTime[domain] = (tabsTime[domain] ?? 0) + (Date.now() - tabStartTime);
 
   chrome.storage.local.set({ tabsTime });
   chrome.runtime.sendMessage(null);
@@ -22,18 +17,15 @@ window.addEventListener('blur', async () => {
 chrome.storage.local.get(['blockedSites']).then(async (storage) => {
   if (storage.blockedSites.includes(window.location.origin)) {
     const title = document.querySelector('title').cloneNode(true);
-
     const contentHTML = await fetch(chrome.runtime.getURL('content/content.html'));
-    document.documentElement.innerHTML = await contentHTML.text();
-    document.head.appendChild(title);
+    const contentText = await contentHTML.text();
+    const content = new DOMParser().parseFromString(contentText, 'text/html');
+    const CSS = content.getElementById('CSS');
+    const icon = content.getElementById('icon');
 
-    const CSS = document.createElement('link');
-    CSS.rel = 'stylesheet';
-    CSS.type = 'text/css';
+    content.head.appendChild(title);
     CSS.href = chrome.runtime.getURL('content/content.css');
-    document.head.appendChild(CSS);
-
-    const icon = document.getElementById('icon');
-    icon.src = `${chrome.runtime.getURL('../icons/lotus.svg')}`;
+    icon.src = `${chrome.runtime.getURL('icons/lotus.svg')}`;
+    document.replaceChild(content.documentElement, document.documentElement);
   }
 });
