@@ -7,110 +7,33 @@ window.addEventListener('focus', () => {
 });
 
 window.addEventListener('blur', async () => {
-  try {
-    const { tabsTime } = await chrome.storage.local.get();
+  const { tabsTime } = await chrome.storage.local.get();
 
-    if (tabsTime[domain]) {
-      tabsTime[domain] += Date.now() - tabStartTime;
-    } else {
-      tabsTime[domain] = Date.now() - tabStartTime;
-    }
-
-    await chrome.storage.local.set({ tabsTime });
-    chrome.runtime.sendMessage(null);
-  } catch (error) {
-    console.error('Error accessing chrome.storage.local:', error);
+  if (tabsTime[domain]) {
+    tabsTime[domain] += Date.now() - tabStartTime;
+  } else {
+    tabsTime[domain] = Date.now() - tabStartTime;
   }
+
+  chrome.storage.local.set({ tabsTime });
+  chrome.runtime.sendMessage(null);
 });
 
-chrome.storage.local.get(['blockedSites']).then((storage) => {
+chrome.storage.local.get(['blockedSites']).then(async (storage) => {
   if (storage.blockedSites.includes(window.location.origin)) {
-    const body = document.querySelector('body');
-    body.innerHTML = `
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-      <style>
-        body,
-        :root {
-          all: initial !important;
-        }
-      </style>
-      <div id="focus-block"></div>
-    `;
+    const title = document.querySelector('title').cloneNode(true);
 
-    const focusBlock = body.querySelector('#focus-block');
-    focusBlock.attachShadow({ mode: 'open' });
-    focusBlock.shadowRoot.innerHTML = `
-      <style>
-        :host {
-          font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          display: flex !important;
-          flex-direction: column !important;
-          justify-content: center !important;
-          align-items: center !important;
-          height: 100vh !important;
-          background-color: rgb(184, 215, 248) !important;
-        }
+    const contentHTML = await fetch(chrome.runtime.getURL('content/content.html'));
+    document.documentElement.innerHTML = await contentHTML.text();
+    document.head.appendChild(title);
 
-        #panel {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          height: 440px;
-          width: 720px;
-          background-color: white;
-          text-align: center;
-          border-radius: 16px;
-          box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
-        }      
-  
-        button {
-          height: 40px;
-          width: 120px;
-          cursor: pointer;
-          background-color: rgb(241, 241, 241);
-          border: 1px solid rgb(150, 150, 150);
-          color: black;
-          font-family: "Inter";
-          font-weight: 500;
-          text-align: center;
-        }
+    const CSS = document.createElement('link');
+    CSS.rel = 'stylesheet';
+    CSS.type = 'text/css';
+    CSS.href = chrome.runtime.getURL('content/content.css');
+    document.head.appendChild(CSS);
 
-        #blocked {
-          font-size: 28px;
-        }
-        
-        #icon {
-          width: 200px;
-          height: 200px;
-        }
-
-        #quote {
-          font-size: 24px;
-          margin-top: 36px;
-          font-variant: small-caps;
-        }    
-
-        #button-container {
-          display: flex;
-          gap: 16px;
-        }    
-      </style>
-      <div id="panel">
-        <p id="blocked">This site has been blocked by FocusBlock</p>
-        <img id="icon" src=${chrome.runtime.getURL('../icons/lotus.svg')} />
-        <p id="quote">life begins at the end of your comfort zone</p>
-        <div id="button-container">
-          <button id="setting">Settings</button>
-          <button>+3 minute</button>
-          <button>+10 minutes</button>
-          <button>+15 minutes</button>
-          <button id="set-timeout">Set Timeout</button>
-        </div>
-      </div>
-    `;
+    const icon = document.getElementById('icon');
+    icon.src = `${chrome.runtime.getURL('../icons/lotus.svg')}`;
   }
 });

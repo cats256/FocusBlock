@@ -1,0 +1,55 @@
+body {
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: rgb(184, 215, 248);
+}
+
+#panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 440px;
+  width: 720px;
+  background-color: white;
+  text-align: center;
+  border-radius: 16px;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+}
+
+#blocked {
+  font-size: 28px;
+}
+
+#icon {
+  width: 200px;
+  height: 200px;
+}
+
+#quote {
+  font-size: 24px;
+  margin-top: 36px;
+  font-variant: small-caps;
+}
+
+#button-container {
+  display: flex;
+  gap: 16px;
+}
+
+button {
+  height: 40px;
+  width: 120px;
+  cursor: pointer;
+  background-color: rgb(241, 241, 241);
+  border: 1px solid rgb(150, 150, 150);
+  color: black;
+  font-family: "Inter";
+  font-weight: 500;
+  text-align: center;
+}
