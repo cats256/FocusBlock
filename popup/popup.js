@@ -52,6 +52,6 @@ chrome.runtime.onMessage.addListener(async () => {
   setupSiteToggle();
   setupSiteTodayUsage();
   setupSitesTodayUsage();
-
-  console.log(storage);
 });
+
+chrome.storage.local.get().then((storage) => { console.log(storage); });
