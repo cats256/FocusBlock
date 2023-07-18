@@ -1,4 +1,4 @@
-const headStyle = `
+const headCSS = `
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Roboto&display=swap');
 
 body,
@@ -104,28 +104,30 @@ const HTMLpage = `
 `;
 
 const blockSite = async () => {
-  const title = document.querySelector("title").cloneNode(true);
-  const contentHTML = await fetch(chrome.runtime.getURL("content/content.html"));
-  const contentText = await contentHTML.text();
-  const content = new DOMParser().parseFromString(contentText, "text/html");
-  const CSS = content.getElementById("CSS");
-  const icon = content.getElementById("icon");
-  const threeMinTimeout = content.getElementById("3-min-timeout");
-  const fiveMinTimeout = content.getElementById("5-min-timeout");
-  const fifteenMinTimeout = content.getElementById("15-min-timeout");
+  const headStyle = document.createElement("style");
+  headStyle.innerHTML = headCSS;
+  document.head.appendChild(headStyle);
+
+  const focusBlock = document.createElement("div");
+  focusBlock.id = "focus-block";
+  document.body.appendChild(focusBlock);
+
+  const shadowRoot = focusBlock.attachShadow({ mode: "closed" });
+  shadowRoot.innerHTML = CSS + HTMLpage;
+
+  const threeMinTimeout = shadowRoot.getElementById("3-min-timeout");
+  const fiveMinTimeout = shadowRoot.getElementById("5-min-timeout");
+  const fifteenMinTimeout = shadowRoot.getElementById("15-min-timeout");
 
   const setUnblockTime = (time) => {
     chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + time } });
-    window.location.reload();
+    headCSS.remove();
+    focusBlock.remove();
   };
 
-  content.head.appendChild(title);
-  CSS.href = `${chrome.runtime.getURL("content/content.css")}`;
-  icon.src = chrome.runtime.getURL("icons/lotus.svg");
   threeMinTimeout.addEventListener("click", () => setUnblockTime(3 * 60 * 1000));
   fiveMinTimeout.addEventListener("click", () => setUnblockTime(5 * 60 * 1000));
   fifteenMinTimeout.addEventListener("click", () => setUnblockTime(15 * 60 * 1000));
-  document.replaceChild(content.documentElement, document.documentElement);
 };
 
 const url = new URL(window.location.origin);
@@ -151,30 +153,7 @@ chrome.storage.local.get().then(async (storage) => {
   const pastUnblockTime = (storage.unblockTimes[domain] ?? 0) < Date.now();
 
   if (siteInBlockList && pastUnblockTime) {
-    const headCSS = document.createElement("style");
-    headCSS.innerHTML = headStyle;
-    document.head.appendChild(headCSS);
-
-    const focusBlock = document.createElement("div");
-    focusBlock.id = "focus-block";
-    document.body.appendChild(focusBlock);
-
-    const shadowRoot = focusBlock.attachShadow({ mode: "closed" });
-    shadowRoot.innerHTML = CSS + HTMLpage;
-
-    const threeMinTimeout = shadowRoot.getElementById("3-min-timeout");
-    const fiveMinTimeout = shadowRoot.getElementById("5-min-timeout");
-    const fifteenMinTimeout = shadowRoot.getElementById("15-min-timeout");
-
-    const setUnblockTime = (time) => {
-      chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + time } });
-      headCSS.remove();
-      focusBlock.remove();
-    };
-
-    threeMinTimeout.addEventListener("click", () => setUnblockTime(3 * 60 * 1000));
-    fiveMinTimeout.addEventListener("click", () => setUnblockTime(5 * 60 * 1000));
-    fifteenMinTimeout.addEventListener("click", () => setUnblockTime(15 * 60 * 1000));
+    blockSite();
   } else if (siteInBlockList && storage.unblockTimes[domain]) {
     const checkUnblock = setInterval(() => {
       const thirtySecondsBeforeUnblock = storage.unblockTimes[domain] < Date.now() + 30 * 1000;
