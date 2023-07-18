@@ -1,9 +1,10 @@
-const resetStyle = `
+const headStyle = `
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Roboto&display=swap');
 
 body,
 :root {
   all: initial !important;
+  overflow: hidden !important;
 }
 
 #focus-block {
@@ -16,6 +17,8 @@ body,
 
   width: 100% !important;
   height: 100% !important;
+
+  z-index: 2147483647 !important;
 }
 `;
 
@@ -100,18 +103,6 @@ const HTMLpage = `
 </div>
 `;
 
-class FocusBlock extends HTMLElement {
-  constructor() {
-    super();
-
-    const shadowRoot = this.attachShadow({ mode: "open" });
-
-    shadowRoot.innerHTML = CSS + HTMLpage;
-  }
-}
-
-// customElements.define("focus-block", FocusBlock);
-
 const blockSite = async () => {
   const title = document.querySelector("title").cloneNode(true);
   const contentHTML = await fetch(chrome.runtime.getURL("content/content.html"));
@@ -161,32 +152,29 @@ chrome.storage.local.get().then(async (storage) => {
 
   if (siteInBlockList && pastUnblockTime) {
     const headCSS = document.createElement("style");
-    headCSS.innerHTML = resetStyle;
+    headCSS.innerHTML = headStyle;
     document.head.appendChild(headCSS);
-
-    // const focusBlock = document.createElement("focus-block");
-    // document.body.appendChild(focusBlock);
-
-    // Define the new element
 
     const focusBlock = document.createElement("div");
     focusBlock.id = "focus-block";
     document.body.appendChild(focusBlock);
-    const shadowRoot = focusBlock.attachShadow({ mode: "open" });
+
+    const shadowRoot = focusBlock.attachShadow({ mode: "closed" });
     shadowRoot.innerHTML = CSS + HTMLpage;
 
-    // const threeMinTimeout = shadowRoot.getElementById("3-min-timeout");
-    // const fiveMinTimeout = shadowRoot.getElementById("5-min-timeout");
-    // const fifteenMinTimeout = shadowRoot.getElementById("15-min-timeout");
+    const threeMinTimeout = shadowRoot.getElementById("3-min-timeout");
+    const fiveMinTimeout = shadowRoot.getElementById("5-min-timeout");
+    const fifteenMinTimeout = shadowRoot.getElementById("15-min-timeout");
 
-    // const setUnblockTime = (time) => {
-    //   chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + time } });
-    //   shadowRoot.remove();
-    // };
+    const setUnblockTime = (time) => {
+      chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + time } });
+      headCSS.remove();
+      focusBlock.remove();
+    };
 
-    // threeMinTimeout.addEventListener("click", () => setUnblockTime(3 * 60 * 1000));
-    // fiveMinTimeout.addEventListener("click", () => setUnblockTime(5 * 60 * 1000));
-    // fifteenMinTimeout.addEventListener("click", () => setUnblockTime(15 * 60 * 1000));
+    threeMinTimeout.addEventListener("click", () => setUnblockTime(3 * 60 * 1000));
+    fiveMinTimeout.addEventListener("click", () => setUnblockTime(5 * 60 * 1000));
+    fifteenMinTimeout.addEventListener("click", () => setUnblockTime(15 * 60 * 1000));
   } else if (siteInBlockList && storage.unblockTimes[domain]) {
     const checkUnblock = setInterval(() => {
       const thirtySecondsBeforeUnblock = storage.unblockTimes[domain] < Date.now() + 30 * 1000;
