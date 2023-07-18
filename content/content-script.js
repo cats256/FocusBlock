@@ -121,7 +121,7 @@ const blockSite = async () => {
 
   const setUnblockTime = (time) => {
     chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + time } });
-    headCSS.remove();
+    headStyle.remove();
     focusBlock.remove();
   };
 
