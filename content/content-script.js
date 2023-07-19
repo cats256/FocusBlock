@@ -158,9 +158,9 @@ chrome.storage.local.get().then((storage) => {
 
   if (siteInBlockList && pastUnblockTime) {
     blockSite();
-  } else if (siteInBlockList && storage.unblockTimes[domain]) {
+  } else if (siteInBlockList) {
     const timeUntilUnblock = storage.unblockTimes[domain] - Date.now();
-    if (timeUntilUnblock > 0) {
+    if (timeUntilUnblock >= 0) {
       setTimeout(blockSite, timeUntilUnblock);
     }
   }
