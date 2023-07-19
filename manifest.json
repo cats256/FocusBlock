@@ -24,7 +24,8 @@
       "resources": [
         "icons/lotus.svg",
         "content/content.html",
-        "content/content.css"
+        "content/content.css",
+        "font/Inter-Regular.ttf"
       ],
       "matches": ["<all_urls>"]
     }
