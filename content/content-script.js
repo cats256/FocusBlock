@@ -97,13 +97,13 @@ const HTMLpage = `
     <button id="3-min-timeout">+3 minutes</button>
     <button id="5-min-timeout">+10 minutes</button>
     <button id="15-min-timeout">+15 minutes</button>
-    <button id="set-extend">Custom Time</button>
+    <button id="set-extend">Set Timeout</button>
   </div>
 </div>
 </div>
 `;
 
-const blockSite = async () => {
+const blockSite = () => {
   const headStyle = document.createElement("style");
   headStyle.innerHTML = headCSS;
   document.head.appendChild(headStyle);
@@ -119,8 +119,8 @@ const blockSite = async () => {
   const fiveMinTimeout = shadowRoot.getElementById("5-min-timeout");
   const fifteenMinTimeout = shadowRoot.getElementById("15-min-timeout");
 
-  const setUnblockTime = (time) => {
-    chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + time } });
+  const setUnblockTime = (timeout) => {
+    chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + timeout } });
     headStyle.remove();
     focusBlock.remove();
   };
@@ -148,7 +148,7 @@ window.addEventListener("blur", async () => {
   chrome.runtime.sendMessage(null);
 });
 
-chrome.storage.local.get().then(async (storage) => {
+chrome.storage.local.get().then((storage) => {
   const siteInBlockList = storage.blockedSites.includes(window.location.origin);
   const pastUnblockTime = () => (storage.unblockTimes[domain] ?? 0) < Date.now();
 
