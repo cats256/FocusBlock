@@ -1,10 +1,14 @@
 const headCSS = `
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@font-face {
+  font-family: 'Inter';
+  src: url(${chrome.runtime.getURL("font/Inter-Regular.ttf")}) format('woff2');
+}
 
 body,
 :root {
   all: initial !important;
   overflow: hidden !important;
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
 #focus-block {
@@ -25,7 +29,6 @@ body,
 const CSS = `
 <style>
   :host {
-    font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
     display: flex !important;
@@ -124,6 +127,7 @@ const blockSite = () => {
     chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + timeout } });
     headStyle.remove();
     focusBlock.remove();
+    setTimeout(blockSite, timeout);
   };
 
   threeMinTimeout.addEventListener("click", () => setUnblockTime(3 * 60 * 1000));
@@ -150,17 +154,15 @@ chrome.runtime.sendMessage(null);
 
 chrome.storage.local.get().then((storage) => {
   const siteInBlockList = storage.blockedSites.includes(window.location.origin);
-  const pastUnblockTime = () => (storage.unblockTimes[domain] ?? 0) < Date.now();
+  const pastUnblockTime = (storage.unblockTimes[domain] ?? 0) < Date.now();
 
-  if (siteInBlockList && pastUnblockTime()) {
+  if (siteInBlockList && pastUnblockTime) {
     blockSite();
   } else if (siteInBlockList && storage.unblockTimes[domain]) {
-    const checkUnblock = setInterval(() => {
-      if (pastUnblockTime()) {
-        blockSite();
-        clearInterval(checkUnblock);
-      }
-    }, 10000);
+    const timeUntilUnblock = storage.unblockTimes[domain] - Date.now();
+    if (timeUntilUnblock > 0) {
+      setTimeout(blockSite, timeUntilUnblock);
+    }
   }
 });
 
