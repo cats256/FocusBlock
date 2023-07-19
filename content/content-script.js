@@ -140,13 +140,12 @@ window.addEventListener("focus", () => {
 
 window.addEventListener("blur", async () => {
   const { tabsTime } = await chrome.storage.local.get();
-  chrome.storage.local.set({
-    tabsTime: {
-      [domain]: (tabsTime[domain] ?? 0) + (Date.now() - tabStartTime),
-    },
-  });
+  tabsTime[domain] = (tabsTime[domain] ?? 0) + (Date.now() - tabStartTime);
+  chrome.storage.local.set({ tabsTime });
   chrome.runtime.sendMessage(null);
 });
+
+chrome.runtime.sendMessage(null);
 
 chrome.storage.local.get().then((storage) => {
   const siteInBlockList = storage.blockedSites.includes(window.location.origin);
