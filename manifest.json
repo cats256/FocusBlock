@@ -21,11 +21,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": [
-        "icons/lotus.svg",
-        "content/content.html",
-        "content/content.css"
-      ],
+      "resources": ["icons/lotus.svg", "content/content.html", "content/content.css"],
       "matches": ["<all_urls>"]
     }
   ],
