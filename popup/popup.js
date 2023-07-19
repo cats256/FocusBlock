@@ -28,9 +28,11 @@ chrome.runtime.onMessage.addListener(async () => {
     siteToggle.addEventListener("click", () => {
       if (blockedSites.includes(baseUrl)) {
         blockedSites = blockedSites.filter((element) => element !== baseUrl);
+        chrome.tabs.sendMessage(tabs[0].id, "Removed From Block List");
         siteToggle.textContent = "Add To Block List";
       } else {
         blockedSites.push(baseUrl);
+        chrome.tabs.sendMessage(tabs[0].id, "Added To Block List");
         siteToggle.textContent = "Remove From Block List";
       }
       chrome.storage.local.set({ blockedSites });

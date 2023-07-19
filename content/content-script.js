@@ -1,5 +1,5 @@
 const headCSS = `
-@import url('https://fonts.googleapis.com/css2?family=Inter&family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
 body,
 :root {
@@ -105,6 +105,7 @@ const HTMLpage = `
 
 const blockSite = () => {
   const headStyle = document.createElement("style");
+  headStyle.id = "head-style";
   headStyle.innerHTML = headCSS;
   document.head.appendChild(headStyle);
 
@@ -160,5 +161,17 @@ chrome.storage.local.get().then((storage) => {
         clearInterval(checkUnblock);
       }
     }, 10000);
+  }
+});
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message === "Added To Block List") {
+    blockSite();
+  } else {
+    const headStyle = document.getElementById("head-style");
+    const focusBlock = document.getElementById("focus-block");
+
+    headStyle.remove();
+    focusBlock.remove();
   }
 });
