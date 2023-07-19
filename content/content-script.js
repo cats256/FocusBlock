@@ -93,11 +93,11 @@ const HTMLpage = `
   <img id="icon" src="${chrome.runtime.getURL("icons/lotus.svg")}"/>
   <p id="quote">life begins at the end of your comfort zone</p>
   <div id="button-container">
-    <button id="setting">Settings</button>
-    <button id="3-min-timeout">+3 minutes</button>
-    <button id="5-min-timeout">+10 minutes</button>
-    <button id="15-min-timeout">+15 minutes</button>
-    <button id="set-extend">Set Timeout</button>
+    <button title="Open Settings" id="setting">Settings</button>
+    <button title="Unblock Site For 3 Minutes" id="3-min-timeout">+3 minutes</button>
+    <button title="Unblock Site For 10 Minutes" id="5-min-timeout">+10 minutes</button>
+    <button title="Unblock Site For 15 Minutes" id="15-min-timeout">+15 minutes</button>
+    <button title="Set Site Unblock Time" id="set-extend">Set Timeout</button>
   </div>
 </div>
 </div>
