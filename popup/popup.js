@@ -26,9 +26,11 @@ chrome.runtime.onMessage.addListener(async () => {
     siteToggle.addEventListener("click", () => {
       if (blockedSites.includes(baseUrl)) {
         blockedSites = blockedSites.filter((element) => element !== baseUrl);
+        chrome.tabs.sendMessage(tabs[0].id, "Removed From Block List");
         siteToggle.textContent = "Add To Block List";
       } else {
         blockedSites.push(baseUrl);
+        chrome.tabs.sendMessage(tabs[0].id, "Added To Block List");
         siteToggle.textContent = "Remove From Block List";
       }
       chrome.storage.local.set({ blockedSites });
@@ -41,12 +43,18 @@ chrome.runtime.onMessage.addListener(async () => {
     siteTodayUsage.textContent = `This Site: ${siteHrs} ${siteHrs === 0 ? "hr" : "hrs"} ${siteMins} ${
       siteMins === 0 ? "min" : "mins"
     }`;
+    siteTodayUsage.textContent = `This Site: ${siteHrs} ${siteHrs === 0 ? "hr" : "hrs"} ${siteMins} ${
+      siteMins === 0 ? "min" : "mins"
+    }`;
   };
 
   const setupSitesTodayUsage = () => {
     const sitesTodaySeconds = Object.values(storage.tabsTime).reduce((acc, curr) => acc + curr, 0);
     const sitesHrs = Math.floor(sitesTodaySeconds / 3600000);
     const sitesMins = Math.floor((sitesTodaySeconds % 3600000) / 60000);
+    sitesTodayUsage.textContent = `All Sites: ${sitesHrs} ${sitesHrs === 0 ? "hr" : "hrs"} ${sitesMins} ${
+      sitesMins === 0 ? "min" : "mins"
+    }`;
     sitesTodayUsage.textContent = `All Sites: ${sitesHrs} ${sitesHrs === 0 ? "hr" : "hrs"} ${sitesMins} ${
       sitesMins === 0 ? "min" : "mins"
     }`;
@@ -58,6 +66,9 @@ chrome.runtime.onMessage.addListener(async () => {
   setupSitesTodayUsage();
 });
 
+chrome.storage.local.get().then((storage) => {
+  console.log(storage);
+});
 chrome.storage.local.get().then((storage) => {
   console.log(storage);
 });
