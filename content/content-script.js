@@ -150,17 +150,14 @@ window.addEventListener("blur", async () => {
 
 chrome.storage.local.get().then(async (storage) => {
   const siteInBlockList = storage.blockedSites.includes(window.location.origin);
-  const pastUnblockTime = (storage.unblockTimes[domain] ?? 0) < Date.now();
+  const pastUnblockTime = () => (storage.unblockTimes[domain] ?? 0) < Date.now();
 
-  if (siteInBlockList && pastUnblockTime) {
+  if (siteInBlockList && pastUnblockTime()) {
     blockSite();
   } else if (siteInBlockList && storage.unblockTimes[domain]) {
     const checkUnblock = setInterval(() => {
-      const thirtySecondsBeforeUnblock = storage.unblockTimes[domain] < Date.now() + 30 * 1000;
-
-      if (thirtySecondsBeforeUnblock) {
-        alert("You have 30 seconds left before this site is blocked.");
-        setTimeout(blockSite, 30 * 1000);
+      if (pastUnblockTime()) {
+        blockSite();
         clearInterval(checkUnblock);
       }
     }, 10000);
