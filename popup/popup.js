@@ -70,3 +70,7 @@ chrome.runtime.onMessage.addListener(async () => {
 chrome.storage.local.get().then((storage) => {
   console.log(storage);
 });
+
+document.getElementById("timer").addEventListener("click", () => {
+  document.location.href = "./pomodoro/pomodoro.html";
+});
