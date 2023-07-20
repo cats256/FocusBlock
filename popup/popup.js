@@ -4,6 +4,25 @@ const pomodoroHTMLText = await pomodoroHTML.text();
 const pomodoroTimer = document.getElementById("pomodoro-timer");
 pomodoroTimer.innerHTML = pomodoroHTMLText;
 
+const focusTab = document.getElementById("focus-tab");
+
+const timer = document.getElementById("timer");
+const powerSettings = document.getElementById("power-settings");
+
+timer.addEventListener("click", () => {
+  focusTab.style.display = "none";
+  pomodoroTimer.style.display = "block";
+  timer.style.backgroundColor = rgb(205, 205, 205);
+  powerSettings.style.backgroundColor = "";
+});
+
+powerSettings.addEventListener("click", () => {
+  focusTab.style.display = "flex";
+  pomodoroTimer.style.display = "none";
+  powerSettings.style.backgroundColor = rgb(205, 205, 205);
+  timer.style.backgroundColor = "";
+});
+
 chrome.runtime.onMessage.addListener(async () => {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   const url = new URL(tabs[0].url);
@@ -69,8 +88,4 @@ chrome.runtime.onMessage.addListener(async () => {
 // For debugging
 chrome.storage.local.get().then((storage) => {
   console.log(storage);
-});
-
-document.getElementById("timer").addEventListener("click", () => {
-  document.location.href = "./pomodoro/pomodoro.html";
 });
