@@ -97,7 +97,7 @@ const HTMLpage = `
 `;
 
 const isUnblocked = false;
-const siteRemoved = false;
+const siteRemovedFromBlockList = false;
 
 const blockSite = () => {
   const headStyle = document.createElement("style");
@@ -122,7 +122,7 @@ const blockSite = () => {
     focusBlock.remove();
     isUnblocked = true;
     setTimeout(() => {
-      if (!siteRemoved) {
+      if (!siteRemovedFromBlockList) {
         blockSite();
         isUnblocked = false;
       }
@@ -168,7 +168,7 @@ chrome.storage.local.get().then((storage) => {
 chrome.runtime.onMessage.addListener((message) => {
   if (message === "Added To Block List") {
     blockSite();
-    siteRemoved = false;
+    siteRemovedFromBlockList = false;
   } else {
     const headStyle = document.getElementById("head-style");
     const focusBlock = document.getElementById("focus-block");
@@ -176,7 +176,7 @@ chrome.runtime.onMessage.addListener((message) => {
     if (!isUnblocked) {
       headStyle.remove();
       focusBlock.remove();
-      siteRemoved = true;
+      siteRemovedFromBlockList = true;
     }
   }
 });

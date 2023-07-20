@@ -1,10 +1,7 @@
-* {
-  font-family: "Inter", sans-serif;
+:root {
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-:root {
   height: 492px;
   width: 300px;
   background-color: rgb(255, 255, 255);
@@ -57,12 +54,15 @@ button:hover {
   font-size: 20px;
 }
 
+.panel {
+  flex-grow: 1;
+}
+
 #focus-tab {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  flex-grow: 1;
 }
 
 #block-list-panel,
