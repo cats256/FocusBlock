@@ -4,38 +4,29 @@ const headCSS = `
   src: url(${chrome.runtime.getURL("font/Inter-Regular.ttf")}) format('woff2');
 }
 
-body,
 :root {
-  all: initial !important;
   overflow: hidden !important;
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-}
-
-#focus-block {
-  position:fixed !important;
-  padding:0 !important;
-  margin:0 !important;
-
-  top:0 !important;
-  left:0 !important;
-
-  width: 100% !important;
-  height: 100% !important;
-
-  z-index: 2147483647 !important;
 }
 `;
 
 const CSS = `
 <style>
   :host {
+    all: initial !important;
+    font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    position:fixed !important;
+    padding:0 !important;
+    margin:0 !important;
+    top:0 !important;
+    left:0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 2147483647 !important;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    height: 100vh !important;
-    margin: 0 !important;
     background-color: rgb(184, 215, 248) !important;
   }
 
@@ -78,7 +69,6 @@ const CSS = `
     background-color: rgb(241, 241, 241);
     border: 1px solid rgb(150, 150, 150);
     color: black;
-    font-family: "Inter";
     font-weight: 500;
     text-align: center;
   }
