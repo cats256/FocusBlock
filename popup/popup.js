@@ -45,18 +45,12 @@ chrome.runtime.onMessage.addListener(async () => {
     siteTodayUsage.textContent = `This Site: ${siteHrs} ${
       siteHrs === 0 ? "hr" : "hrs"
     } ${siteMins} ${siteMins === 0 ? "min" : "mins"}`;
-    siteTodayUsage.textContent = `This Site: ${siteHrs} ${
-      siteHrs === 0 ? "hr" : "hrs"
-    } ${siteMins} ${siteMins === 0 ? "min" : "mins"}`;
   };
 
   const setupSitesTodayUsage = () => {
     const sitesTodaySeconds = Object.values(storage.tabsTime).reduce((acc, curr) => acc + curr, 0);
     const sitesHrs = Math.floor(sitesTodaySeconds / 3600000);
     const sitesMins = Math.floor((sitesTodaySeconds % 3600000) / 60000);
-    sitesTodayUsage.textContent = `All Sites: ${sitesHrs} ${
-      sitesHrs === 0 ? "hr" : "hrs"
-    } ${sitesMins} ${sitesMins === 0 ? "min" : "mins"}`;
     sitesTodayUsage.textContent = `All Sites: ${sitesHrs} ${
       sitesHrs === 0 ? "hr" : "hrs"
     } ${sitesMins} ${sitesMins === 0 ? "min" : "mins"}`;
