@@ -96,6 +96,9 @@ const HTMLpage = `
 </div>
 `;
 
+const isUnblocked = false;
+const siteRemoved = false;
+
 const blockSite = () => {
   const headStyle = document.createElement("style");
   headStyle.id = "head-style";
@@ -117,7 +120,13 @@ const blockSite = () => {
     chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + timeout } });
     headStyle.remove();
     focusBlock.remove();
-    setTimeout(blockSite, timeout);
+    isUnblocked = true;
+    setTimeout(() => {
+      if (!siteRemoved) {
+        blockSite();
+        isUnblocked = false;
+      }
+    }, timeout);
   };
 
   threeMinTimeout.addEventListener("click", () => setUnblockTime(3 * 60 * 1000));
@@ -155,33 +164,19 @@ chrome.storage.local.get().then((storage) => {
     }
   }
 });
-if (storage.blockedSites.includes(window.location.origin) && pastUnblockTime) {
-  const title = document.querySelector("title").cloneNode(true);
-  const contentHTML = await fetch(chrome.runtime.getURL("content/content.html"));
-  const contentText = await contentHTML.text();
-  const content = new DOMParser().parseFromString(contentText, "text/html");
-  const CSS = content.getElementById("CSS");
-  const icon = content.getElementById("icon");
-  const threeMinTimeout = content.getElementById("3-min-timeout");
-  const fiveMinTimeout = content.getElementById("5-min-timeout");
-  const fifteenMinTimeout = content.getElementById("15-min-timeout");
 
-  chrome.runtime.onMessage.addListener((message) => {
-    if (message === "Added To Block List") {
-      blockSite();
-    } else {
-      const headStyle = document.getElementById("head-style");
-      const focusBlock = document.getElementById("focus-block");
+chrome.runtime.onMessage.addListener((message) => {
+  if (message === "Added To Block List") {
+    blockSite();
+    siteRemoved = false;
+  } else {
+    const headStyle = document.getElementById("head-style");
+    const focusBlock = document.getElementById("focus-block");
 
+    if (!isUnblocked) {
       headStyle.remove();
       focusBlock.remove();
-      content.head.appendChild(title);
-      CSS.href = chrome.runtime.getURL("content/content.css");
-      icon.src = chrome.runtime.getURL("icons/lotus.svg");
-      threeMinTimeout.addEventListener("click", () => setUnblockTime(3 * 60 * 1000));
-      fiveMinTimeout.addEventListener("click", () => setUnblockTime(5 * 60 * 1000));
-      fifteenMinTimeout.addEventListener("click", () => setUnblockTime(15 * 60 * 1000));
-      document.replaceChild(content.documentElement, document.documentElement);
+      siteRemoved = true;
     }
-  });
-}
+  }
+});

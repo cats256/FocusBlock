@@ -11,7 +11,7 @@
     "type": "module"
   },
   "action": {
-    "default_popup": "popup/pomodoro/pomodoro.html"
+    "default_popup": "popup/popup.html"
   },
   "content_scripts": [
     {
@@ -21,12 +21,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": [
-        "icons/lotus.svg",
-        "content/content.html",
-        "content/content.css",
-        "font/Inter-Regular.ttf"
-      ],
+      "resources": ["icons/lotus.svg", "font/Inter-Regular.ttf"],
       "matches": ["<all_urls>"]
     }
   ],
