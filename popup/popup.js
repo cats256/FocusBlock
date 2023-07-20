@@ -1,10 +1,6 @@
-const pomodoroTimer = document.getElementById("pomodoro-timer");
-const pomodoroHTML = await fetch("pomodoro/pomodoro.html");
-const pomodoroHTMLText = await pomodoroHTML.text();
-pomodoroTimer.innerHTML = pomodoroHTMLText;
-
-const focusTab = document.getElementById("focus-tab");
 const focusBlock = document.getElementById("focus-block");
+const pomodoroTimer = document.getElementById("pomodoro-timer");
+const focusTab = document.getElementById("focus-tab");
 
 const timer = document.getElementById("timer");
 timer.addEventListener("click", () => {
