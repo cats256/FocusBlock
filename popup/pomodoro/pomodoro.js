@@ -159,9 +159,9 @@ start_button.addEventListener("click", () => {
   // chrome.runtime.sendMessage({ type: "start pomodoro" });
 });
 
-back_button.addEventListener("click", () => {
-  document.location.href = "../popup.html";
-});
+// back_button.addEventListener("click", () => {
+//   document.location.href = "../popup.html";
+// });
 
 reset_button.addEventListener("click", () => {
   reset();
