@@ -2,7 +2,7 @@
   font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 492px;
+  height: 484px;
   width: 300px;
   background-color: rgb(255, 255, 255);
   margin: 0px;
@@ -25,6 +25,9 @@ button {
   background-color: rgb(240, 240, 240);
   border: transparent;
   border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 button:hover {
@@ -32,7 +35,7 @@ button:hover {
 }
 
 #button-container > button {
-  height: 100% !important;
+  height: 100%;
   background-color: initial;
 }
 
@@ -69,10 +72,11 @@ button:hover {
 
 #button-container {
   display: flex;
+  flex-direction: row;
   gap: 10px;
   margin: 0px;
   margin-top: auto;
-  height: 48px;
+  height: 60px;
   padding: 10px;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 16px;
 }
