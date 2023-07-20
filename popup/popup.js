@@ -1,4 +1,5 @@
 const focusBlock = document.getElementById("focus-block");
+
 const pomodoroTimer = document.getElementById("pomodoro-timer");
 const focusTab = document.getElementById("focus-tab");
 
@@ -8,10 +9,11 @@ timer.addEventListener("click", () => {
   pomodoroTimer.style.display = "block";
   timer.style.backgroundColor = "rgb(205, 205, 205)";
   powerSettings.style.backgroundColor = "";
-  focusBlock.textContent = "Pomorodo Timer";
+  document.getElementById("focus-block").textContent = "Pomorodo Timer";
 });
 
 const powerSettings = document.getElementById("power-settings");
+powerSettings.style.backgroundColor = "rgb(205, 205, 205)";
 powerSettings.addEventListener("click", () => {
   focusTab.style.display = "flex";
   pomodoroTimer.style.display = "none";
