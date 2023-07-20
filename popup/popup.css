@@ -58,25 +58,6 @@ button:hover {
   flex-grow: 1;
 }
 
-#focus-tab {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-#block-list-panel,
-#focus-tab > button {
-  width: 240px;
-  border-radius: 4px;
-  font-size: 12px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
-}
-
-#focus-tab > button {
-  height: 32px;
-}
-
 #block-list-panel {
   display: flex;
   flex-direction: column;

@@ -1,25 +1,18 @@
-#block-list-panel,
-#focus-tab > button {
-  width: 240px;
-  border-radius: 4px;
-  font-size: 12px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
+#focus-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 
 #focus-tab > button {
   height: 32px;
 }
 
-#block-list-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 0px;
-  background-color: rgb(245, 245, 245);
-}
-
-#block-list-panel {
-  height: 160px;
-  overflow-y: scroll;
+#block-list-panel,
+#focus-tab > button {
+  width: 240px;
+  border-radius: 4px;
+  font-size: 12px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
 }
