@@ -4,6 +4,7 @@ const sessions_input = document.getElementById("sessions");
 
 const start_button = document.getElementById("start");
 const reset_button = document.getElementById("reset");
+const back_button = document.getElementById("back");
 
 let pomodoro_information = {};
 let current_session = 0;
@@ -156,6 +157,10 @@ start_button.addEventListener("click", () => {
   generate_pomodoro_information();
   pomodoro_timer = setInterval(change_time, 1000);
   // chrome.runtime.sendMessage({ type: "start pomodoro" });
+});
+
+back_button.addEventListener("click", () => {
+  document.location.href = "../popup.html";
 });
 
 reset_button.addEventListener("click", () => {
