@@ -149,8 +149,6 @@ window.addEventListener("blur", async () => {
   chrome.runtime.sendMessage(null);
 });
 
-chrome.runtime.sendMessage(null);
-
 chrome.storage.local.get().then((storage) => {
   const siteInBlockList = storage.blockedSites.includes(window.location.origin);
   const pastUnblockTime = (storage.unblockTimes[domain] ?? 0) < Date.now();
