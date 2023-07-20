@@ -96,8 +96,8 @@ const HTMLpage = `
 </div>
 `;
 
-const isUnblocked = false;
-const siteRemovedFromBlockList = false;
+let isUnblocked = false;
+let siteRemovedFromBlockList = false;
 
 const blockSite = () => {
   const headStyle = document.createElement("style");
