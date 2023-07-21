@@ -136,7 +136,7 @@ const blockSite = () => {
     }, timeout);
   };
 
-  threeMinTimeout.addEventListener("click", () => setUnblockTime(10 * 1000));
+  threeMinTimeout.addEventListener("click", () => setUnblockTime(3 * 60 * 1000));
   tenMinTimeout.addEventListener("click", () => setUnblockTime(10 * 60 * 1000));
   fifteenMinTimeout.addEventListener("click", () => setUnblockTime(15 * 60 * 1000));
 };
