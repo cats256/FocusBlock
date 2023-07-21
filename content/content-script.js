@@ -128,7 +128,7 @@ const blockSite = () => {
     focusBlock.remove();
     setTimeout(async () => {
       const { blockedSites, focusMode } = await chrome.storage.local.get();
-      const siteInBlockList = blockedSites.includes(window.location.origin);
+      const siteInBlockList = blockedSites.includes(domain);
 
       if (siteInBlockList && focusMode) {
         blockSite();
@@ -143,24 +143,25 @@ const blockSite = () => {
 
 const url = new URL(window.location.origin);
 const domain = url.host.replace("www.", "");
+
 let tabStartTime = Date.now();
+window.addEventListener("blur", async () => {
+  const { tabsTime } = await chrome.storage.local.get();
+  tabsTime[domain] = (tabsTime[domain] ?? 0) + (Date.now() - tabStartTime);
+  chrome.storage.local.set({ tabsTime });
+  chrome.runtime.sendMessage(domain);
+});
 
 window.addEventListener("focus", () => {
   tabStartTime = Date.now();
 });
 
-window.addEventListener("blur", async () => {
-  const { tabsTime } = await chrome.storage.local.get();
-  tabsTime[domain] = (tabsTime[domain] ?? 0) + (Date.now() - tabStartTime);
-  chrome.storage.local.set({ tabsTime });
-  chrome.runtime.sendMessage(null);
-});
-
 chrome.storage.local.get().then((storage) => {
-  let siteInBlockList = storage.blockedSites.includes(window.location.origin);
-  let isUnblocked = storage.unblockTimes[domain] > Date.now();
+  const siteInBlockList = storage.blockedSites.includes(domain);
+  const isUnblocked = storage.unblockTimes[domain] > Date.now();
+  const focusMode = storage.focusMode;
 
-  if (siteInBlockList && !isUnblocked) {
+  if (siteInBlockList && !isUnblocked && focusMode) {
     blockSite();
   } else if (siteInBlockList) {
     const timeUntilUnblock = storage.unblockTimes[domain] - Date.now();
@@ -172,7 +173,7 @@ chrome.storage.local.get().then((storage) => {
 
 chrome.runtime.onMessage.addListener(async (message) => {
   const { blockedSites, focusMode, unblockTimes } = await chrome.storage.local.get();
-  const siteInBlockList = blockedSites.includes(window.location.origin);
+  const siteInBlockList = blockedSites.includes(domain);
   const isUnblocked = unblockTimes[domain] > Date.now();
 
   const headStyle = document.getElementById("head-style");

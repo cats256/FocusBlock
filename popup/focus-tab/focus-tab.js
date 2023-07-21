@@ -1,15 +1,13 @@
-chrome.runtime.onMessage.addListener(async () => {
-  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  const url = new URL(tabs[0].url);
-  const baseUrl = `${url.protocol}//${url.host}`;
-  const domain = url.host.replace("www.", "");
+const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
 
-  const focusToggle = document.getElementById("focus-toggle");
-  const siteToggle = document.getElementById("site-toggle");
-  const siteTodayUsage = document.getElementById("site-today-usage");
-  const sitesTodayUsage = document.getElementById("sites-today-usage");
+const focusToggle = document.getElementById("focus-toggle");
+const siteToggle = document.getElementById("site-toggle");
+const siteTodayUsage = document.getElementById("site-today-usage");
+const sitesTodayUsage = document.getElementById("sites-today-usage");
+
+chrome.runtime.onMessage.addListener(async (message) => {
+  const domain = message;
   const storage = await chrome.storage.local.get();
-
   let { focusMode, blockedSites } = storage;
 
   const setupFocusToggle = () => {
@@ -23,14 +21,14 @@ chrome.runtime.onMessage.addListener(async () => {
   };
 
   const setupSiteToggle = () => {
-    siteToggle.textContent = blockedSites.includes(baseUrl) ? "Remove From Blocklist" : "Add To Blocklist";
+    siteToggle.textContent = blockedSites.includes(domain) ? "Remove From Blocklist" : "Add To Blocklist";
     siteToggle.addEventListener("click", () => {
-      if (blockedSites.includes(baseUrl)) {
-        blockedSites = blockedSites.filter((element) => element !== baseUrl);
+      if (blockedSites.includes(domain)) {
+        blockedSites = blockedSites.filter((element) => element !== domain);
         chrome.tabs.sendMessage(tabs[0].id, "Removed From Block List");
         siteToggle.textContent = "Add To Block List";
       } else {
-        blockedSites.push(baseUrl);
+        blockedSites.push(domain);
         chrome.tabs.sendMessage(tabs[0].id, "Added To Block List");
         siteToggle.textContent = "Remove From Block List";
       }
