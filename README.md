@@ -10,6 +10,10 @@ Async/await, shadow DOM, web-accessible resource, etc,...
 
 ### Ideas to implement
 
+- Implement calculating progress. For example: Today's Usage: (↑30%)
+
+- Do unit test
+
 - Whitelist mode
 
 - Add title / alt to buttons
