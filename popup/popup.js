@@ -43,7 +43,7 @@ settingsButton.addEventListener("click", () => {
   settingsButton.style.backgroundColor = "rgb(205, 205, 205)";
   powerSettings.style.backgroundColor = "";
 
-  document.getElementById("focus-block").textContent = "Settings";
+  focusBlock.textContent = "Settings";
 });
 
 // For debugging
