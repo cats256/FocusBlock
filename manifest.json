@@ -21,7 +21,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["icons/lotus.svg", "font/Inter-Regular.ttf"],
+      "resources": ["icons/lotus.svg", "font/Inter-Regular.ttf", "font/Inter-Medium.ttf"],
       "matches": ["<all_urls>"]
     }
   ],

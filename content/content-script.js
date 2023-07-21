@@ -1,7 +1,14 @@
 const headCSS = `
 @font-face {
   font-family: 'Inter';
-  src: url(${chrome.runtime.getURL("font/Inter-Regular.ttf")}) format('woff2');
+  src: url(${chrome.runtime.getURL("font/Inter-Regular.ttf")}) format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url(${chrome.runtime.getURL("font/Inter-Medium.ttf")}) format('truetype');
+  font-weight: 500;
 }
 
 :root {
@@ -27,7 +34,7 @@ const CSS = `
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    background-color: rgb(184, 215, 248) !important;
+    background-color: rgb(235, 235, 235) !important;
   }
 
   #panel {
@@ -55,6 +62,7 @@ const CSS = `
     font-size: 24px;
     margin-top: 36px;
     font-variant: small-caps;
+    font-weight: 500;
   }
 
   #button-container {
@@ -63,14 +71,15 @@ const CSS = `
   }
 
   button {
+    font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     height: 40px;
     width: 120px;
     cursor: pointer;
     background-color: rgb(241, 241, 241);
     border: 1px solid rgb(150, 150, 150);
     color: black;
-    font-weight: 500;
     text-align: center;
+    font-weight: 500;
   }
 
   button:hover {
