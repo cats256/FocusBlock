@@ -97,16 +97,13 @@ const HTMLpage = `
   <div id="button-container">
     <button title="Open Settings" id="setting">Settings</button>
     <button title="Unblock Site For 3 Minutes" id="3-min-timeout">+3 minutes</button>
-    <button title="Unblock Site For 10 Minutes" id="5-min-timeout">+10 minutes</button>
+    <button title="Unblock Site For 10 Minutes" id="10-min-timeout">+10 minutes</button>
     <button title="Unblock Site For 15 Minutes" id="15-min-timeout">+15 minutes</button>
     <button title="Set Site Unblock Time" id="set-extend">Set Timeout</button>
   </div>
 </div>
 </div>
 `;
-
-let isUnblocked = false;
-let siteRemovedFromBlockList = false;
 
 const blockSite = () => {
   const headStyle = document.createElement("style");
@@ -122,24 +119,25 @@ const blockSite = () => {
   shadowRoot.innerHTML = CSS + HTMLpage;
 
   const threeMinTimeout = shadowRoot.getElementById("3-min-timeout");
-  const fiveMinTimeout = shadowRoot.getElementById("5-min-timeout");
+  const tenMinTimeout = shadowRoot.getElementById("10-min-timeout");
   const fifteenMinTimeout = shadowRoot.getElementById("15-min-timeout");
 
   const setUnblockTime = (timeout) => {
     chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + timeout } });
     headStyle.remove();
     focusBlock.remove();
-    isUnblocked = true;
-    setTimeout(() => {
-      if (!siteRemovedFromBlockList) {
+    setTimeout(async () => {
+      const { blockedSites, focusMode } = await chrome.storage.local.get();
+      const siteInBlockList = blockedSites.includes(window.location.origin);
+
+      if (siteInBlockList && focusMode) {
         blockSite();
-        isUnblocked = false;
       }
     }, timeout);
   };
 
-  threeMinTimeout.addEventListener("click", () => setUnblockTime(3 * 60 * 1000));
-  fiveMinTimeout.addEventListener("click", () => setUnblockTime(5 * 60 * 1000));
+  threeMinTimeout.addEventListener("click", () => setUnblockTime(10 * 1000));
+  tenMinTimeout.addEventListener("click", () => setUnblockTime(10 * 60 * 1000));
   fifteenMinTimeout.addEventListener("click", () => setUnblockTime(15 * 60 * 1000));
 };
 
@@ -159,10 +157,10 @@ window.addEventListener("blur", async () => {
 });
 
 chrome.storage.local.get().then((storage) => {
-  const siteInBlockList = storage.blockedSites.includes(window.location.origin);
-  const pastUnblockTime = (storage.unblockTimes[domain] ?? 0) < Date.now();
+  let siteInBlockList = storage.blockedSites.includes(window.location.origin);
+  let isUnblocked = storage.unblockTimes[domain] > Date.now();
 
-  if (siteInBlockList && pastUnblockTime) {
+  if (siteInBlockList && !isUnblocked) {
     blockSite();
   } else if (siteInBlockList) {
     const timeUntilUnblock = storage.unblockTimes[domain] - Date.now();
@@ -172,18 +170,23 @@ chrome.storage.local.get().then((storage) => {
   }
 });
 
-chrome.runtime.onMessage.addListener((message) => {
-  if (message === "Added To Block List") {
-    blockSite();
-    siteRemovedFromBlockList = false;
-  } else {
-    const headStyle = document.getElementById("head-style");
-    const focusBlock = document.getElementById("focus-block");
+chrome.runtime.onMessage.addListener(async (message) => {
+  const { blockedSites, focusMode, unblockTimes } = await chrome.storage.local.get();
+  const siteInBlockList = blockedSites.includes(window.location.origin);
+  const isUnblocked = unblockTimes[domain] > Date.now();
 
-    if (!isUnblocked) {
-      headStyle.remove();
-      focusBlock.remove();
-      siteRemovedFromBlockList = true;
-    }
+  const headStyle = document.getElementById("head-style");
+  const focusBlock = document.getElementById("focus-block");
+
+  if (message === "Added To Block List" && !isUnblocked && focusMode) {
+    blockSite();
+  } else if (message === "Removed From Block List" && !isUnblocked && focusMode) {
+    headStyle.remove();
+    focusBlock.remove();
+  } else if (message === "Focus Mode Enabled" && !isUnblocked && siteInBlockList) {
+    blockSite();
+  } else if (message === "Focus Mode Disabled" && !isUnblocked && siteInBlockList) {
+    headStyle.remove();
+    focusBlock.remove();
   }
 });

@@ -17,6 +17,7 @@ chrome.runtime.onMessage.addListener(async () => {
     focusToggle.addEventListener("click", () => {
       focusMode = !focusMode;
       focusToggle.textContent = focusMode ? "Disable Focus Mode" : "Enable Focus Mode";
+      chrome.tabs.sendMessage(tabs[0].id, focusMode ? "Focus Mode Enabled" : "Focus Mode Disabled");
       chrome.storage.local.set({ focusMode });
     });
   };
