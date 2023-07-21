@@ -149,7 +149,7 @@ window.addEventListener("blur", async () => {
   const { tabsTime } = await chrome.storage.local.get();
   tabsTime[domain] = (tabsTime[domain] ?? 0) + (Date.now() - tabStartTime);
   chrome.storage.local.set({ tabsTime });
-  chrome.runtime.sendMessage(domain);
+  chrome.runtime.sendMessage("Run Popup");
 });
 
 window.addEventListener("focus", () => {

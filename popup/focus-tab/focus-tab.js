@@ -1,13 +1,13 @@
 const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+const url = new URL(tabs[0].url);
+const domain = url.host.replace("www.", "");
 
-const focusToggle = document.getElementById("focus-toggle");
-const siteToggle = document.getElementById("site-toggle");
-const siteTodayUsage = document.getElementById("site-today-usage");
-const sitesTodayUsage = document.getElementById("sites-today-usage");
+const setupPopup = (storage, isChromeInternalPage) => {
+  const focusToggle = document.getElementById("focus-toggle");
+  const siteToggle = document.getElementById("site-toggle");
+  const siteTodayUsage = document.getElementById("site-today-usage");
+  const sitesTodayUsage = document.getElementById("sites-today-usage");
 
-chrome.runtime.onMessage.addListener(async (message) => {
-  const domain = message;
-  const storage = await chrome.storage.local.get();
   let { focusMode, blockedSites } = storage;
 
   const setupFocusToggle = () => {
@@ -54,7 +54,17 @@ chrome.runtime.onMessage.addListener(async (message) => {
   };
 
   setupFocusToggle();
-  setupSiteToggle();
+  isChromeInternalPage ? (siteToggle.textContent = "Page Not Applicable") : setupSiteToggle();
   setupSiteTodayUsage();
   setupSitesTodayUsage();
-});
+};
+
+if (url.protocol === "chrome:") {
+  const storage = await chrome.storage.local.get();
+  setupPopup(storage, true);
+} else {
+  chrome.runtime.onMessage.addListener(async () => {
+    const storage = await chrome.storage.local.get();
+    setupPopup(storage, false);
+  });
+}
