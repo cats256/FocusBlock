@@ -5,10 +5,12 @@ const domain = url.host.replace("www.", "");
 const setupPopup = (storage, isChromeInternalPage) => {
   const focusToggle = document.getElementById("focus-toggle");
   const siteToggle = document.getElementById("site-toggle");
+  const listMode = document.getElementById("list-mode");
+
   const siteTodayUsage = document.getElementById("site-today-usage");
   const sitesTodayUsage = document.getElementById("sites-today-usage");
 
-  let { focusMode, blockedSites } = storage;
+  let { focusMode, blockedSites, whiteListMode } = storage;
 
   const setupFocusToggle = () => {
     focusToggle.textContent = focusMode ? "Disable Focus Mode" : "Enable Focus Mode";
@@ -36,6 +38,16 @@ const setupPopup = (storage, isChromeInternalPage) => {
     });
   };
 
+  const setupListMode = () => {
+    listMode.textContent = whiteListMode ? "Enable Blocklist Mode" : "Enable Whitelist Mode";
+    listMode.addEventListener("click", () => {
+      whiteListMode = !whiteListMode;
+      listMode.textContent = whiteListMode ? "Enable Blocklist Mode" : "Enable Whitelist Mode";
+      chrome.tabs.sendMessage(tabs[0].id, whiteListMode ? "Whitelist Mode Enabled" : "Blocklist Mode Enabled");
+      chrome.storage.local.set({ whiteListMode });
+    });
+  };
+
   const setupSiteTodayUsage = () => {
     const siteHrs = Math.floor((storage.tabsTime[domain] ?? 0) / 3600000);
     const siteMins = Math.floor(((storage.tabsTime[domain] ?? 0) % 3600000) / 60000);
@@ -55,6 +67,7 @@ const setupPopup = (storage, isChromeInternalPage) => {
 
   setupFocusToggle();
   isChromeInternalPage ? (siteToggle.textContent = "Page Not Applicable") : setupSiteToggle();
+  setupListMode();
   setupSiteTodayUsage();
   setupSitesTodayUsage();
 };
