@@ -3,5 +3,3 @@ chrome.storage.local.get().then((storage) => {
     chrome.storage.local.set({ blockedSites: [], tabsTime: {}, unblockTimes: {} });
   }
 });
-
-chrome.runtime.onMessage.addListener(() => {});
