@@ -84,6 +84,7 @@ if (url.protocol === "chrome:") {
   setupToggles(storage, false);
 
   chrome.storage.onChanged.addListener((changes) => {
+    console.log(changes);
     setupStatistics(changes.tabsTime.newValue);
   });
 }
