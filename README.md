@@ -10,6 +10,8 @@ Async/await, shadow DOM, web-accessible resource, etc,...
 
 ### Ideas to implement
 
+- Pause pomodoro button
+
 - Alert when a focus / break session ended
 
 - Implement calculating progress. For example: Today's Usage: (↑30%)
