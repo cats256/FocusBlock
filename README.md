@@ -10,6 +10,8 @@ Async/await, shadow DOM, web-accessible resource, etc,...
 
 ### Ideas to implement
 
+- Toggle whether user wants an alert
+
 - Pause pomodoro button
 
 - Alert when a focus / break session ended
