@@ -2,13 +2,10 @@ const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
 const url = new URL(tabs[0].url);
 const domain = url.host.replace("www.", "");
 
-const setupPopup = (storage, isChromeInternalPage) => {
+const setupToggles = (storage, isChromeInternalPage) => {
   const focusToggle = document.getElementById("focus-toggle");
   const siteToggle = document.getElementById("site-toggle");
   const listMode = document.getElementById("list-mode");
-
-  const siteTodayUsage = document.getElementById("site-today-usage");
-  const sitesTodayUsage = document.getElementById("sites-today-usage");
 
   let { focusMode, blockedSites, whiteListMode } = storage;
 
@@ -48,16 +45,25 @@ const setupPopup = (storage, isChromeInternalPage) => {
     });
   };
 
+  setupFocusToggle();
+  isChromeInternalPage ? (siteToggle.textContent = "Page Not Applicable") : setupSiteToggle();
+  setupListMode();
+};
+
+const setupStatistics = (tabsTime) => {
+  const siteTodayUsage = document.getElementById("site-today-usage");
+  const sitesTodayUsage = document.getElementById("sites-today-usage");
+
   const setupSiteTodayUsage = () => {
-    const siteHrs = Math.floor((storage.tabsTime[domain] ?? 0) / 3600000);
-    const siteMins = Math.floor(((storage.tabsTime[domain] ?? 0) % 3600000) / 60000);
+    const siteHrs = Math.floor((tabsTime[domain] ?? 0) / 3600000);
+    const siteMins = Math.floor(((tabsTime[domain] ?? 0) % 3600000) / 60000);
     siteTodayUsage.textContent = `This Site: ${siteHrs} ${siteHrs === 0 ? "hr" : "hrs"} ${siteMins} ${
       siteMins === 0 ? "min" : "mins"
     }`;
   };
 
   const setupSitesTodayUsage = () => {
-    const sitesTodaySeconds = Object.values(storage.tabsTime).reduce((acc, curr) => acc + curr, 0);
+    const sitesTodaySeconds = Object.values(tabsTime).reduce((acc, curr) => acc + curr, 0);
     const sitesHrs = Math.floor(sitesTodaySeconds / 3600000);
     const sitesMins = Math.floor((sitesTodaySeconds % 3600000) / 60000);
     sitesTodayUsage.textContent = `All Sites: ${sitesHrs} ${sitesHrs === 0 ? "hr" : "hrs"} ${sitesMins} ${
@@ -65,19 +71,21 @@ const setupPopup = (storage, isChromeInternalPage) => {
     }`;
   };
 
-  setupFocusToggle();
-  isChromeInternalPage ? (siteToggle.textContent = "Page Not Applicable") : setupSiteToggle();
-  setupListMode();
   setupSiteTodayUsage();
   setupSitesTodayUsage();
 };
 
+const storage = await chrome.storage.local.get();
+const tabsTime = storage.tabsTime;
+
 if (url.protocol === "chrome:") {
-  const storage = await chrome.storage.local.get();
-  setupPopup(storage, true);
+  setupToggles(storage, true);
 } else {
-  chrome.runtime.onMessage.addListener(async () => {
-    const storage = await chrome.storage.local.get();
-    setupPopup(storage, false);
+  setupToggles(storage, false);
+
+  chrome.storage.onChanged.addListener((changes) => {
+    setupStatistics(changes.tabsTime.newValue);
   });
 }
+
+setupStatistics(tabsTime);
