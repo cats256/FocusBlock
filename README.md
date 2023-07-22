@@ -10,6 +10,8 @@ Async/await, shadow DOM, web-accessible resource, etc,...
 
 ### Ideas to implement
 
+- Alert when a focus / break session ended
+
 - Implement calculating progress. For example: Today's Usage: (↑30%)
 
 - Do unit test
