@@ -10,13 +10,17 @@ const setupToggles = (storage, isChromeInternalPage) => {
   let { focusMode, blockedSites, whiteListMode } = storage;
 
   const setupFocusToggle = () => {
-    focusToggle.textContent = focusMode ? "Disable Focus Mode" : "Enable Focus Mode";
-    focusToggle.addEventListener("click", () => {
-      focusMode = !focusMode;
+    if (isChromeInternalPage) {
+      focusToggle.textContent = "Page Not Applicable";
+    } else {
       focusToggle.textContent = focusMode ? "Disable Focus Mode" : "Enable Focus Mode";
-      chrome.tabs.sendMessage(tabs[0].id, focusMode ? "Focus Mode Enabled" : "Focus Mode Disabled");
-      chrome.storage.local.set({ focusMode });
-    });
+      focusToggle.addEventListener("click", () => {
+        focusMode = !focusMode;
+        focusToggle.textContent = focusMode ? "Disable Focus Mode" : "Enable Focus Mode";
+        chrome.tabs.sendMessage(tabs[0].id, focusMode ? "Focus Mode Enabled" : "Focus Mode Disabled");
+        chrome.storage.local.set({ focusMode });
+      });
+    }
   };
 
   const setupSiteToggle = () => {
@@ -35,7 +39,7 @@ const setupToggles = (storage, isChromeInternalPage) => {
     });
   };
 
-  const setupListMode = () => {
+  const setupListToggle = () => {
     listMode.textContent = whiteListMode ? "Enable Blocklist Mode" : "Enable Whitelist Mode";
     listMode.addEventListener("click", () => {
       whiteListMode = !whiteListMode;
@@ -46,8 +50,8 @@ const setupToggles = (storage, isChromeInternalPage) => {
   };
 
   setupFocusToggle();
-  isChromeInternalPage ? (siteToggle.textContent = "Page Not Applicable") : setupSiteToggle();
-  setupListMode();
+  setupSiteToggle();
+  setupListToggle();
 };
 
 const setupStatistics = (tabsTime) => {
@@ -84,7 +88,6 @@ if (url.protocol === "chrome:") {
   setupToggles(storage, false);
 
   chrome.storage.onChanged.addListener((changes) => {
-    console.log(changes);
     setupStatistics(changes.tabsTime.newValue);
   });
 }
