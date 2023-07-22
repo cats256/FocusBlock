@@ -105,6 +105,11 @@ const HTMLpage = `
 </div>
 `;
 
+const unblockSite = () => {
+  document.getElementById("head-style").remove();
+  document.getElementById("focus-block").remove();
+};
+
 const blockSite = () => {
   const headStyle = document.createElement("style");
   headStyle.id = "head-style";
@@ -124,8 +129,7 @@ const blockSite = () => {
 
   const setUnblockTime = (timeout) => {
     chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + timeout } });
-    headStyle.remove();
-    focusBlock.remove();
+    unblockSite();
     setTimeout(async () => {
       const { blockedSites, focusMode } = await chrome.storage.local.get();
       const siteInBlockList = blockedSites.includes(domain);
@@ -175,18 +179,13 @@ chrome.runtime.onMessage.addListener(async (message) => {
   const siteInBlockList = blockedSites.includes(domain);
   const isUnblocked = unblockTimes[domain] > Date.now();
 
-  const headStyle = document.getElementById("head-style");
-  const focusBlock = document.getElementById("focus-block");
-
   if (message === "Added To Block List" && !isUnblocked && focusMode) {
     blockSite();
   } else if (message === "Removed From Block List" && !isUnblocked && focusMode) {
-    headStyle.remove();
-    focusBlock.remove();
+    unblockSite();
   } else if (message === "Focus Mode Enabled" && !isUnblocked && siteInBlockList) {
     blockSite();
   } else if (message === "Focus Mode Disabled" && !isUnblocked && siteInBlockList) {
-    headStyle.remove();
-    focusBlock.remove();
+    unblockSite();
   }
 });
