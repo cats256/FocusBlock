@@ -8,7 +8,7 @@ const timer = document.getElementById("timer");
 const powerSettings = document.getElementById("power-settings");
 const settingsButton = document.getElementById("settings");
 
-const setupPomodoroTimer = () => {
+const setupPomodoroTimerBtn = () => {
   timer.addEventListener("click", () => {
     pomodoroTimer.style.display = "block";
     focusTab.style.display = "none";
@@ -22,7 +22,7 @@ const setupPomodoroTimer = () => {
   });
 };
 
-const setupPowerSettings = () => {
+const setupPowerSettingsBtn = () => {
   powerSettings.style.backgroundColor = "rgb(205, 205, 205)";
   powerSettings.addEventListener("click", () => {
     pomodoroTimer.style.display = "none";
@@ -51,8 +51,8 @@ const setupSettingsButton = () => {
   });
 };
 
-setupPomodoroTimer();
-setupPowerSettings();
+setupPomodoroTimerBtn();
+setupPowerSettingsBtn();
 setupSettingsButton();
 
 // For debugging
