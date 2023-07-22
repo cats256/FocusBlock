@@ -10,6 +10,8 @@ Async/await, shadow DOM, web-accessible resource, etc,...
 
 ### Ideas to implement
 
+- For production branch download and combine all files needed for popup.js into one file
+
 - Toggle whether user wants an alert
 
 - Pause pomodoro button
