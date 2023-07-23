@@ -1,3 +1,7 @@
+const pomodoroHTML = await fetch("pomodoro/pomodoro.html");
+const pomodoroHTMLText = await pomodoroHTML.text();
+document.getElementById("pomodoro-timer").innerHTML = pomodoroHTMLText;
+
 const focus_minute_input = document.getElementById("focus-minutes");
 const break_minute_input = document.getElementById("break-minutes");
 const sessions_input = document.getElementById("sessions");

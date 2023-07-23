@@ -1,28 +1,21 @@
-<!-- <p class="text-center font-bold my-3 text-3xl font-semibold">Pomodoro Timer</p> -->
-<p class="text-gray-500 text-center text-sm">Be More Productive With Pomodoro</p>
-
+<p class="text-gray-500 text-center text-sm" id="type">Be More Productive With Pomodoro</p>
 <div class="m-auto mt-10">
   <p class="text-3xl m-auto text-center" id="clock">00:00</p>
 </div>
-<div class="m-auto mt-10">
-  <p class="text-sm m-auto text-center" id="type"></p>
-</div>
-
-<div class="flex-col m-auto py-16 w-2/3">
+<div class="flex-col m-auto py-8 w-2/3">
   <div class="flex justify-between my-2">
-    <p>Focus Time</p>
+    <p>Focus Minutes</p>
     <input value="25" type="number" id="focus-minutes" class="border-2 border-blue-300 rounded w-1/4 text-center" />
   </div>
   <div class="flex justify-between my-2">
-    <p>Break Time</p>
+    <p>Break Minutes</p>
     <input type="number" value="5" id="break-minutes" class="border-2 border-blue-300 rounded w-1/4 text-center" />
   </div>
   <div class="flex justify-between my-2">
-    <p>Cycles</p>
+    <p>Total Cycles</p>
     <input type="number" value="2" id="sessions" class="border-2 border-blue-300 rounded w-1/4 text-center" />
   </div>
 </div>
-
 <div class="flex-col">
   <div class="m-auto w-2/3 my-2">
     <button class="w-full border-2 border-green-500 rounded bg-green-500 m-auto p-1 text-white" id="start">
