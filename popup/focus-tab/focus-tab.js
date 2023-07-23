@@ -60,16 +60,20 @@ const setupToggles = (isChromeInternalPage) => {
   setupListToggle();
 };
 
-const setupStatistics = (tabsTime) => {
+const setupStatistics = (tabsTime, isChromeInternalPage) => {
   const siteTodayUsage = document.getElementById("site-today-usage");
   const sitesTodayUsage = document.getElementById("sites-today-usage");
 
   const setupSiteTodayUsage = () => {
-    const siteHrs = Math.floor((tabsTime[domain] ?? 0) / 3600000);
-    const siteMins = Math.floor(((tabsTime[domain] ?? 0) % 3600000) / 60000);
-    siteTodayUsage.textContent = `This Site: ${siteHrs} ${siteHrs === 0 ? "hr" : "hrs"} ${siteMins} ${
-      siteMins === 0 ? "min" : "mins"
-    }`;
+    if (isChromeInternalPage) {
+      siteTodayUsage.textContent = "Page Not Applicable";
+    } else {
+      const siteHrs = Math.floor((tabsTime[domain] ?? 0) / 3600000);
+      const siteMins = Math.floor(((tabsTime[domain] ?? 0) % 3600000) / 60000);
+      siteTodayUsage.textContent = `This Site: ${siteHrs} ${siteHrs === 0 ? "hr" : "hrs"} ${siteMins} ${
+        siteMins === 0 ? "min" : "mins"
+      }`;
+    }
   };
 
   const setupSitesTodayUsage = () => {
@@ -90,14 +94,14 @@ const setupFocusTab = () => {
 
   if (url.protocol === "chrome:") {
     setupToggles(true);
-    setupStatistics(tabsTime);
+    setupStatistics(tabsTime, true);
   } else {
     setupToggles(false);
-    setupStatistics(tabsTime);
+    setupStatistics(tabsTime, false);
 
     chrome.storage.onChanged.addListener((changes) => {
       if (changes.tabsTime) {
-        setupStatistics(changes.tabsTime.newValue);
+        setupStatistics(changes.tabsTime.newValue, false);
       }
     });
   }
