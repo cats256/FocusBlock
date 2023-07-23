@@ -2,11 +2,13 @@ const focusTabHTML = await fetch("focus-tab/focus-tab.html");
 const focusTabHTMLText = await focusTabHTML.text();
 document.getElementById("focus-tab").innerHTML = focusTabHTMLText;
 
+const storage = await chrome.storage.local.get();
+
 const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
 const url = new URL(tabs[0].url);
 const domain = url.host.replace("www.", "");
 
-const setupToggles = (storage, isChromeInternalPage) => {
+const setupToggles = (isChromeInternalPage) => {
   const focusToggle = document.getElementById("focus-toggle");
   const siteToggle = document.getElementById("site-toggle");
   const listMode = document.getElementById("list-mode");
@@ -83,19 +85,22 @@ const setupStatistics = (tabsTime) => {
   setupSitesTodayUsage();
 };
 
-const storage = await chrome.storage.local.get();
-const { tabsTime } = storage;
+const setupFocusTab = () => {
+  const { tabsTime } = storage;
 
-if (url.protocol === "chrome:") {
-  setupToggles(storage, true);
-} else {
-  setupToggles(storage, false);
+  if (url.protocol === "chrome:") {
+    setupToggles(true);
+    setupStatistics(tabsTime);
+  } else {
+    setupToggles(false);
+    setupStatistics(tabsTime);
 
-  chrome.storage.onChanged.addListener((changes) => {
-    if (changes.tabsTime) {
-      setupStatistics(changes.tabsTime.newValue);
-    }
-  });
-}
+    chrome.storage.onChanged.addListener((changes) => {
+      if (changes.tabsTime) {
+        setupStatistics(changes.tabsTime.newValue);
+      }
+    });
+  }
+};
 
-setupStatistics(tabsTime);
+setupFocusTab();
