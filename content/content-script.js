@@ -110,6 +110,9 @@ const unblockSite = () => {
   document.getElementById("focus-block").remove();
 };
 
+const url = new URL(window.location.origin);
+const domain = url.host.replace("www.", "");
+
 const blockSite = () => {
   const headStyle = document.createElement("style");
   headStyle.id = "head-style";
@@ -145,9 +148,6 @@ const blockSite = () => {
   fifteenMinTimeout.addEventListener("click", () => setUnblockTime(15 * 60 * 1000));
 };
 
-const url = new URL(window.location.origin);
-const domain = url.host.replace("www.", "");
-
 let tabStartTime = Date.now();
 window.addEventListener("blur", async () => {
   const { tabsTime } = await chrome.storage.local.get();
@@ -162,7 +162,7 @@ window.addEventListener("focus", () => {
 chrome.storage.local.get().then((storage) => {
   const siteInBlockList = storage.blockedSites.includes(domain);
   const isUnblocked = storage.unblockTimes[domain] > Date.now();
-  const focusMode = storage.focusMode;
+  const { focusMode } = storage;
 
   if (siteInBlockList && !isUnblocked && focusMode) {
     blockSite();
