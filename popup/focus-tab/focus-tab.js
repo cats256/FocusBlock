@@ -16,33 +16,33 @@ const setupToggles = (isChromeInternalPage) => {
   let { focusMode, blockedSites, whiteListMode } = storage;
 
   const setupFocusToggle = () => {
-    if (isChromeInternalPage) {
-      focusToggle.textContent = "Page Not Applicable";
-    } else {
+    focusToggle.textContent = focusMode ? "Disable Focus Mode" : "Enable Focus Mode";
+    focusToggle.addEventListener("click", () => {
+      focusMode = !focusMode;
       focusToggle.textContent = focusMode ? "Disable Focus Mode" : "Enable Focus Mode";
-      focusToggle.addEventListener("click", () => {
-        focusMode = !focusMode;
-        focusToggle.textContent = focusMode ? "Disable Focus Mode" : "Enable Focus Mode";
-        chrome.tabs.sendMessage(tabs[0].id, focusMode ? "Focus Mode Enabled" : "Focus Mode Disabled");
-        chrome.storage.local.set({ focusMode });
-      });
-    }
+      chrome.tabs.sendMessage(tabs[0].id, focusMode ? "Focus Mode Enabled" : "Focus Mode Disabled");
+      chrome.storage.local.set({ focusMode });
+    });
   };
 
   const setupSiteToggle = () => {
-    siteToggle.textContent = blockedSites.includes(domain) ? "Remove From Blocklist" : "Add To Blocklist";
-    siteToggle.addEventListener("click", () => {
-      if (blockedSites.includes(domain)) {
-        blockedSites = blockedSites.filter((element) => element !== domain);
-        chrome.tabs.sendMessage(tabs[0].id, "Removed From Block List");
-        siteToggle.textContent = "Add To Block List";
-      } else {
-        blockedSites.push(domain);
-        chrome.tabs.sendMessage(tabs[0].id, "Added To Block List");
-        siteToggle.textContent = "Remove From Block List";
-      }
-      chrome.storage.local.set({ blockedSites });
-    });
+    if (isChromeInternalPage) {
+      focusToggle.textContent = "Page Not Applicable";
+    } else {
+      siteToggle.textContent = blockedSites.includes(domain) ? "Remove From Blocklist" : "Add To Blocklist";
+      siteToggle.addEventListener("click", () => {
+        if (blockedSites.includes(domain)) {
+          blockedSites = blockedSites.filter((element) => element !== domain);
+          chrome.tabs.sendMessage(tabs[0].id, "Removed From Block List");
+          siteToggle.textContent = "Add To Block List";
+        } else {
+          blockedSites.push(domain);
+          chrome.tabs.sendMessage(tabs[0].id, "Added To Block List");
+          siteToggle.textContent = "Remove From Block List";
+        }
+        chrome.storage.local.set({ blockedSites });
+      });
+    }
   };
 
   const setupListToggle = () => {
