@@ -1,3 +1,7 @@
+const focusTabHTML = await fetch("focus-tab/focus-tab.html");
+const focusTabHTMLText = await focusTabHTML.text();
+document.getElementById("focus-tab").innerHTML = focusTabHTMLText;
+
 const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
 const url = new URL(tabs[0].url);
 const domain = url.host.replace("www.", "");
