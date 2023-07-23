@@ -92,7 +92,9 @@ if (url.protocol === "chrome:") {
   setupToggles(storage, false);
 
   chrome.storage.onChanged.addListener((changes) => {
-    setupStatistics(changes.tabsTime.newValue);
+    if (changes.tabsTime) {
+      setupStatistics(changes.tabsTime.newValue);
+    }
   });
 }
 
