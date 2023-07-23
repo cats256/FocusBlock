@@ -84,7 +84,7 @@ const setupStatistics = (tabsTime) => {
 };
 
 const storage = await chrome.storage.local.get();
-const tabsTime = storage.tabsTime;
+const { tabsTime } = storage;
 
 if (url.protocol === "chrome:") {
   setupToggles(storage, true);
