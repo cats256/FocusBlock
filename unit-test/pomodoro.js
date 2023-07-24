@@ -1,8 +1,4 @@
 const pomodoroModule = async () => {
-  const pomodoroHTML = await fetch("pomodoro/pomodoro.html");
-  const pomodoroHTMLText = await pomodoroHTML.text();
-  document.getElementById("pomodoro-timer").innerHTML = pomodoroHTMLText;
-
   const focusMinutesInput = document.getElementById("focus-minutes");
   const breakMinutesInput = document.getElementById("break-minutes");
   const cyclesInput = document.getElementById("cycles");
@@ -26,6 +22,7 @@ const pomodoroModule = async () => {
 
   const changeTime = () => {
     const nextTimeIndex = pomodoroInformation.cyclesTimes.findIndex((time) => Date.now() < time);
+
     if (nextTimeIndex === -1) {
       resetPomodoro();
     } else {
@@ -51,9 +48,7 @@ const pomodoroModule = async () => {
         cycles,
         cyclesTimes: [],
       };
-
-      chrome.storage.local.set({ pomodoroEnabled: true });
-
+      pomodoroEnabled = true;
       const currentTime = Date.now();
 
       for (let i = 0; i < cycles; i += 1) {
@@ -64,16 +59,24 @@ const pomodoroModule = async () => {
         pomodoroInformation.cyclesTimes.push(focusEnded);
       }
 
-      pomodoroTimer = setInterval(changeTime, 1000);
-      chrome.storage.local.set({ pomodoroInformation });
+      chrome.storage.local.set({ pomodoroInformation, pomodoroEnabled });
+      pomodoroTimer = setInterval(changeTime, 100);
     }
   });
 
   resetButton.addEventListener("click", () => {
-    if (!pomodoroEnabled) {
+    if (pomodoroEnabled) {
       resetPomodoro();
     }
   });
+
+  const resume = async () => {
+    if (pomodoroEnabled) {
+      pomodoroTimer = setInterval(changeTime, 1000);
+    }
+  };
+
+  resume();
 };
 
 module.exports = pomodoroModule;
