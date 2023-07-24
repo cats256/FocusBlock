@@ -50,8 +50,8 @@ startButton.addEventListener("click", () => {
     const breakMinutes = parseInt(breakMinutesInput.value, 10);
     const cycles = parseInt(cyclesInput.value, 10);
 
-    const currentTime = Date.now();
     const cyclesTimes = [];
+    const currentTime = Date.now();
     for (let i = 0; i < cycles; i += 1) {
       const focusStart = currentTime + (focusMinutes + breakMinutes) * i * 60 * 1000;
       const focusEnded = focusStart + focusMinutes * 60 * 1000;
