@@ -14,7 +14,7 @@ const type = document.getElementById("type");
 
 const storage = await chrome.storage.local.get();
 
-let { pomodoroInformation, pomodoroEnabled } = storage;
+let { pomodoroEnabled, pomodoroInformation } = storage;
 let pomodoroTimer;
 
 const resetPomodoro = () => {
@@ -23,8 +23,8 @@ const resetPomodoro = () => {
   clock.textContent = "00:00";
   type.textContent = "Do More With Pomodoro";
 
-  pomodoroInformation = {};
   pomodoroEnabled = false;
+  pomodoroInformation = {};
   chrome.storage.local.set({ pomodoroInformation, pomodoroEnabled });
 };
 
@@ -50,25 +50,21 @@ startButton.addEventListener("click", () => {
     const breakMinutes = parseInt(breakMinutesInput.value, 10);
     const cycles = parseInt(cyclesInput.value, 10);
 
-    pomodoroInformation = {
-      focusMinutes,
-      breakMinutes,
-      cycles,
-      cyclesTimes: [],
-    };
-    pomodoroEnabled = true;
     const currentTime = Date.now();
-
+    const cyclesTimes = [];
     for (let i = 0; i < cycles; i += 1) {
       const focusStart = currentTime + (focusMinutes + breakMinutes) * i * 60 * 1000;
       const focusEnded = focusStart + focusMinutes * 60 * 1000;
 
-      pomodoroInformation.cyclesTimes.push(focusStart);
-      pomodoroInformation.cyclesTimes.push(focusEnded);
+      cyclesTimes.push(focusStart);
+      cyclesTimes.push(focusEnded);
     }
 
-    chrome.storage.local.set({ pomodoroInformation, pomodoroEnabled });
     pomodoroTimer = setInterval(changeTime, 100);
+
+    pomodoroEnabled = true;
+    pomodoroInformation = { focusMinutes, breakMinutes, cycles, cyclesTimes };
+    chrome.storage.local.set({ pomodoroEnabled, pomodoroInformation });
   }
 });
 
