@@ -193,19 +193,3 @@ chrome.storage.local.get().then((storage) => {
     }
   });
 });
-
-// chrome.runtime.onMessage.addListener(async (message) => {
-//   const { blockedSites, focusMode, unblockTimes } = await chrome.storage.local.get();
-//   const siteInBlockList = blockedSites.includes(domain);
-//   const isUnblocked = unblockTimes[domain] > Date.now();
-
-//   if (message === "Added To Block List" && !isUnblocked && focusMode) {
-//     blockSite();
-//   } else if (message === "Removed From Block List" && !isUnblocked && focusMode) {
-//     unblockSite();
-//   } else if (message === "Focus Mode Enabled" && !isUnblocked && siteInBlockList) {
-//     blockSite();
-//   } else if (message === "Focus Mode Disabled" && !isUnblocked && siteInBlockList) {
-//     unblockSite();
-//   }
-// });
