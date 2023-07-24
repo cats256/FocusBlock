@@ -1,5 +1,5 @@
 const { JSDOM } = require("jsdom");
-const { fireEvent, getByText } = require("@testing-library/dom");
+const { fireEvent } = require("@testing-library/dom");
 const pomodoroModule = require("./pomodoro");
 
 const dom = new JSDOM(`
@@ -68,27 +68,50 @@ describe("pomodoroModule", () => {
       expect(document.getElementById("clock").textContent).toBe("00:00");
       expect(document.getElementById("type").textContent).toBe("Do More With Pomodoro");
 
-      const startButton = getByText(document, "Start Session");
       const focusMinutesInput = document.getElementById("focus-minutes");
       const breakMinutesInput = document.getElementById("break-minutes");
       const cyclesInput = document.getElementById("cycles");
+      const startButton = document.getElementById("start");
+
+      const clock = document.getElementById("clock");
+      const type = document.getElementById("type");
 
       fireEvent.change(focusMinutesInput, { target: { value: "30" } });
       fireEvent.change(breakMinutesInput, { target: { value: "5" } });
-      fireEvent.change(cyclesInput, { target: { value: "2" } });
+      fireEvent.change(cyclesInput, { target: { value: "4" } });
       fireEvent.click(startButton);
 
       jest.advanceTimersByTime(1000);
-      expect(document.getElementById("clock").textContent).toBe("29:59");
+      expect(clock.textContent).toBe("29:59");
+      expect(type.textContent).toBe("Focus Session 1");
 
       jest.advanceTimersByTime(30 * 60 * 1000);
-      expect(document.getElementById("clock").textContent).toBe("04:59");
+      expect(clock.textContent).toBe("04:59");
+      expect(type.textContent).toBe("Break Session 1");
 
       jest.advanceTimersByTime(5 * 60 * 1000);
-      expect(document.getElementById("clock").textContent).toBe("29:59");
+      expect(clock.textContent).toBe("29:59");
+      expect(type.textContent).toBe("Focus Session 2");
 
       jest.advanceTimersByTime(30 * 60 * 1000);
-      expect(document.getElementById("clock").textContent).toBe("04:59");
+      expect(clock.textContent).toBe("04:59");
+      expect(type.textContent).toBe("Break Session 2");
+
+      jest.advanceTimersByTime(5 * 60 * 1000);
+      expect(clock.textContent).toBe("29:59");
+      expect(type.textContent).toBe("Focus Session 3");
+
+      jest.advanceTimersByTime(30 * 60 * 1000);
+      expect(clock.textContent).toBe("04:59");
+      expect(type.textContent).toBe("Break Session 3");
+
+      jest.advanceTimersByTime(5 * 60 * 1000);
+      expect(clock.textContent).toBe("29:59");
+      expect(type.textContent).toBe("Focus Session 4");
+
+      jest.advanceTimersByTime(30 * 60 * 1000);
+      expect(clock.textContent).toBe("00:00");
+      expect(type.textContent).toBe("Do More With Pomodoro");
     };
 
     startTest();
