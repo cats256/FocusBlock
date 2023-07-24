@@ -26,7 +26,7 @@ const setupToggles = (isChromeInternalPage) => {
 
   const setupSiteToggle = () => {
     if (isChromeInternalPage) {
-      focusToggle.textContent = "Page Not Applicable";
+      siteToggle.textContent = "Page Not Applicable";
     } else {
       siteToggle.textContent = blockedSites.includes(domain) ? "Remove From Blocklist" : "Add To Blocklist";
       siteToggle.addEventListener("click", () => {
