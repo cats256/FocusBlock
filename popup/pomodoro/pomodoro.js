@@ -16,11 +16,11 @@ let pomodoroTimer = null;
 
 const changeTime = () => {
   console.log(pomodoroInformation);
-  const nextTimeIndex = pomodoroInformation.cyclesInfo.findIndex((time) => Date.now() < time);
+  const nextTimeIndex = pomodoroInformation.cyclesTimes.findIndex((time) => Date.now() < time);
   if (nextTimeIndex === -1) {
     chrome.storage.local.set({ pomodoroEnabled: false });
   } else {
-    const sessionTimeLeft = pomodoroInformation.cyclesInfo[nextTimeIndex] - Date.now();
+    const sessionTimeLeft = pomodoroInformation.cyclesTimes[nextTimeIndex] - Date.now();
     const minutes = `${Math.floor(sessionTimeLeft / 60000)}`.padStart(2, "0");
     const seconds = `${Math.floor((sessionTimeLeft / 1000) % 60)}`.padStart(2, "0");
     document.getElementById("clock").textContent = `${minutes}:${seconds}`;
@@ -40,7 +40,7 @@ startButton.addEventListener("click", () => {
       focusMinutes,
       breakMinutes,
       cycles,
-      cyclesInfo: [],
+      cyclesTimes: [],
     };
 
     chrome.storage.local.set({ pomodoroEnabled: true });
@@ -51,8 +51,8 @@ startButton.addEventListener("click", () => {
       const focusStart = currentTime + (focusMinutes + breakMinutes) * i * 60 * 1000;
       const focusEnded = focusStart + focusMinutes * 60 * 1000;
 
-      pomodoroInformation.cyclesInfo.push(focusStart);
-      pomodoroInformation.cyclesInfo.push(focusEnded);
+      pomodoroInformation.cyclesTimes.push(focusStart);
+      pomodoroInformation.cyclesTimes.push(focusEnded);
     }
 
     console.log(pomodoroInformation);
