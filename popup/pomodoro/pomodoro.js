@@ -9,18 +9,23 @@ const cyclesInput = document.getElementById("cycles");
 const startButton = document.getElementById("start");
 const resetButton = document.getElementById("reset");
 
+const clock = document.getElementById("clock");
+const type = document.getElementById("type");
+
 const storage = await chrome.storage.local.get();
 
 let { pomodoroInformation, pomodoroEnabled } = storage;
 let pomodoroTimer;
 
 const resetPomodoro = () => {
+  clearInterval(pomodoroTimer);
+
+  clock.textContent = "00:00";
+  type.textContent = "Do More With Pomodoro";
+
   pomodoroInformation = {};
   pomodoroEnabled = false;
   chrome.storage.local.set({ pomodoroInformation, pomodoroEnabled });
-  clearInterval(pomodoroTimer);
-  document.getElementById("clock").textContent = "00:00";
-  document.getElementById("type").textContent = "Do More With Pomodoro";
 };
 
 const changeTime = () => {
@@ -32,10 +37,10 @@ const changeTime = () => {
     const sessionTimeLeft = pomodoroInformation.cyclesTimes[nextTimeIndex] - Date.now();
     const minutes = `${Math.floor(sessionTimeLeft / 60000)}`.padStart(2, "0");
     const seconds = `${Math.floor((sessionTimeLeft / 1000) % 60)}`.padStart(2, "0");
-    document.getElementById("clock").textContent = `${minutes}:${seconds}`;
-
     const sessionType = nextTimeIndex % 2 === 1 ? "Focus" : "Break";
-    document.getElementById("type").textContent = `${sessionType} Session ${Math.floor((nextTimeIndex + 1) / 2)}`;
+
+    clock.textContent = `${minutes}:${seconds}`;
+    type.textContent = `${sessionType} Session ${Math.floor((nextTimeIndex + 1) / 2)}`;
   }
 };
 
