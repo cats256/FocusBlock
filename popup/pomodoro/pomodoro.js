@@ -25,6 +25,7 @@ const resetPomodoro = () => {
 
 const changeTime = () => {
   const nextTimeIndex = pomodoroInformation.cyclesTimes.findIndex((time) => Date.now() < time);
+
   if (nextTimeIndex === -1) {
     resetPomodoro();
   } else {
@@ -50,9 +51,7 @@ startButton.addEventListener("click", () => {
       cycles,
       cyclesTimes: [],
     };
-
-    chrome.storage.local.set({ pomodoroEnabled: true });
-
+    pomodoroEnabled = true;
     const currentTime = Date.now();
 
     for (let i = 0; i < cycles; i += 1) {
@@ -63,13 +62,13 @@ startButton.addEventListener("click", () => {
       pomodoroInformation.cyclesTimes.push(focusEnded);
     }
 
-    pomodoroTimer = setInterval(changeTime, 1000);
-    chrome.storage.local.set({ pomodoroInformation });
+    chrome.storage.local.set({ pomodoroInformation, pomodoroEnabled });
+    pomodoroTimer = setInterval(changeTime, 100);
   }
 });
 
 resetButton.addEventListener("click", () => {
-  if (!pomodoroEnabled) {
+  if (pomodoroEnabled) {
     resetPomodoro();
   }
 });
