@@ -53,7 +53,7 @@ describe("pomodoroModule", () => {
   jest.useFakeTimers();
 
   it("click on startButton", () => {
-    global.chrome.storage.local.get.mockImplementation((data, callback) => {
+    global.chrome.storage.local.get.mockImplementation(() => {
       const mockData = {
         pomodoroInformation: { cyclesTimes: [] },
         pomodoroEnabled: false,
@@ -61,24 +61,36 @@ describe("pomodoroModule", () => {
       return Promise.resolve(mockData);
     });
 
-    pomodoroModule();
+    const startTest = async () => {
+      await pomodoroModule();
 
-    expect(global.chrome.storage.local.get).toHaveBeenCalledTimes(1);
-    expect(document.getElementById("clock").textContent).toBe("00:00");
-    expect(document.getElementById("type").textContent).toBe("Do More With Pomodoro");
+      expect(global.chrome.storage.local.get).toHaveBeenCalledTimes(1);
+      expect(document.getElementById("clock").textContent).toBe("00:00");
+      expect(document.getElementById("type").textContent).toBe("Do More With Pomodoro");
 
-    const startButton = getByText(document, "Start Session");
-    const focusMinutesInput = document.getElementById("focus-minutes");
-    const breakMinutesInput = document.getElementById("break-minutes");
-    const cyclesInput = document.getElementById("cycles");
+      const startButton = getByText(document, "Start Session");
+      const focusMinutesInput = document.getElementById("focus-minutes");
+      const breakMinutesInput = document.getElementById("break-minutes");
+      const cyclesInput = document.getElementById("cycles");
 
-    fireEvent.change(focusMinutesInput, { target: { value: "30" } });
-    fireEvent.change(breakMinutesInput, { target: { value: "5" } });
-    fireEvent.change(cyclesInput, { target: { value: "2" } });
-    fireEvent.click(startButton);
-    jest.runAllTimers();
+      fireEvent.change(focusMinutesInput, { target: { value: "30" } });
+      fireEvent.change(breakMinutesInput, { target: { value: "5" } });
+      fireEvent.change(cyclesInput, { target: { value: "2" } });
+      fireEvent.click(startButton);
 
-    jest.advanceTimersByTime(1000);
-    expect(document.getElementById("clock").textContent).toBe("29:59");
+      jest.advanceTimersByTime(1000);
+      expect(document.getElementById("clock").textContent).toBe("29:59");
+
+      jest.advanceTimersByTime(30 * 60 * 1000);
+      expect(document.getElementById("clock").textContent).toBe("04:59");
+
+      jest.advanceTimersByTime(5 * 60 * 1000);
+      expect(document.getElementById("clock").textContent).toBe("29:59");
+
+      jest.advanceTimersByTime(30 * 60 * 1000);
+      expect(document.getElementById("clock").textContent).toBe("04:59");
+    };
+
+    startTest();
   });
 });

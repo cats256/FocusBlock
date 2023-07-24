@@ -38,6 +38,7 @@ const pomodoroModule = async () => {
 
   startButton.addEventListener("click", () => {
     if (!pomodoroEnabled) {
+      document.getElementById("clock").textContent = "11:11";
       const focusMinutes = parseInt(focusMinutesInput.value, 10);
       const breakMinutes = parseInt(breakMinutesInput.value, 10);
       const cycles = parseInt(cyclesInput.value, 10);

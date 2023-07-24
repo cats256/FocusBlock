@@ -13,6 +13,15 @@ module.exports = {
     "no-console": "off",
     quotes: "off",
     "max-len": ["error", { code: 120 }],
+    "object-curly-newline": [
+      "error",
+      {
+        ObjectExpression: { consistent: true },
+        ObjectPattern: { consistent: true },
+        ImportDeclaration: { consistent: true },
+        ExportDeclaration: { consistent: true },
+      },
+    ],
   },
   globals: {
     chrome: "readonly",
