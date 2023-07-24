@@ -164,7 +164,7 @@ chrome.storage.local.get().then((storage) => {
   let { focusMode } = storage;
   let timeUntilUnblock = storage.unblockTimes[domain] - Date.now();
 
-  let isBlocked = siteInBlockList && focusMode && timeUntilUnblock < 0;
+  let isBlocked = siteInBlockList && focusMode && !(timeUntilUnblock >= 0);
 
   if (isBlocked) {
     blockSite();
@@ -184,7 +184,7 @@ chrome.storage.local.get().then((storage) => {
       timeUntilUnblock = changes.unblockTimes.newValue[domain] - Date.now();
     }
 
-    if (siteInBlockList && focusMode && !isBlocked && timeUntilUnblock < 0) {
+    if (siteInBlockList && focusMode && !isBlocked && !(timeUntilUnblock >= 0)) {
       blockSite();
       isBlocked = true;
     } else if (!(siteInBlockList && focusMode) && isBlocked) {
