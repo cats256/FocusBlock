@@ -12,13 +12,21 @@ const resetButton = document.getElementById("reset");
 const storage = await chrome.storage.local.get();
 
 let { pomodoroInformation, pomodoroEnabled } = storage;
-let pomodoroTimer = null;
+let pomodoroTimer;
+
+const resetPomodoro = () => {
+  pomodoroInformation = {};
+  pomodoroEnabled = false;
+  chrome.storage.local.set({ pomodoroInformation, pomodoroEnabled });
+  clearInterval(pomodoroTimer);
+  document.getElementById("clock").textContent = "00:00";
+  document.getElementById("type").textContent = "Do More With Pomodoro";
+};
 
 const changeTime = () => {
-  console.log(pomodoroInformation);
   const nextTimeIndex = pomodoroInformation.cyclesTimes.findIndex((time) => Date.now() < time);
   if (nextTimeIndex === -1) {
-    chrome.storage.local.set({ pomodoroEnabled: false });
+    resetPomodoro();
   } else {
     const sessionTimeLeft = pomodoroInformation.cyclesTimes[nextTimeIndex] - Date.now();
     const minutes = `${Math.floor(sessionTimeLeft / 60000)}`.padStart(2, "0");
@@ -55,23 +63,19 @@ startButton.addEventListener("click", () => {
       pomodoroInformation.cyclesTimes.push(focusEnded);
     }
 
-    console.log(pomodoroInformation);
-
     pomodoroTimer = setInterval(changeTime, 1000);
     chrome.storage.local.set({ pomodoroInformation });
   }
 });
 
 resetButton.addEventListener("click", () => {
-  pomodoroInformation = {};
-  pomodoroEnabled = false;
-  chrome.storage.local.set({ pomodoroInformation, pomodoroEnabled });
-  clearInterval(pomodoroTimer);
-  document.getElementById("clock").textContent = "00:00";
+  if (!pomodoroEnabled) {
+    resetPomodoro();
+  }
 });
 
 const resume = async () => {
-  if (storage.pomodoroEnabled) {
+  if (pomodoroEnabled) {
     setInterval(changeTime, 1000);
   }
 };
