@@ -76,7 +76,7 @@ resetButton.addEventListener("click", () => {
 
 const resume = async () => {
   if (pomodoroEnabled) {
-    setInterval(changeTime, 1000);
+    pomodoroTimer = setInterval(changeTime, 1000);
   }
 };
 
