@@ -162,38 +162,50 @@ window.addEventListener("focus", () => {
 chrome.storage.local.get().then((storage) => {
   let siteInBlockList = storage.blockedSites.includes(domain);
   let { focusMode } = storage;
+  let timeUntilUnblock = storage.unblockTimes[domain] - Date.now();
 
-  const timeUntilUnblock = storage.unblockTimes[domain] - Date.now();
+  let isBlocked = siteInBlockList && focusMode && timeUntilUnblock < 0;
 
-  if (siteInBlockList && focusMode) {
-    if (timeUntilUnblock >= 0) {
-      setTimeout(blockSite, timeUntilUnblock);
-    } else {
+  if (isBlocked) {
+    blockSite();
+  } else if (siteInBlockList && focusMode) {
+    setTimeout(() => {
       blockSite();
+      isBlocked = true;
+    }, timeUntilUnblock);
+  }
+
+  chrome.storage.onChanged.addListener((changes) => {
+    if (changes.blockedSites) {
+      siteInBlockList = changes.blockedSites.newValue.includes(domain);
+    } else if (changes.focusMode) {
+      focusMode = changes.focusMode.newValue;
+    } else if (changes.unblockTimes) {
+      timeUntilUnblock = changes.unblockTimes.newValue[domain] - Date.now();
     }
-  }
 
-  // chrome.storage.onChanged.addListener((changes) => {
-  //   if (changes.blockedSites) {
-  //     siteInBlockList = changes.blockedSites.newValue.includes(domain);
-  //   } else if (changes.focusMode) {
-  //     focusMode = changes.focusMode.newValue;
-  //   }
-  // });
+    if (siteInBlockList && focusMode && !isBlocked && timeUntilUnblock < 0) {
+      blockSite();
+      isBlocked = true;
+    } else if (!(siteInBlockList && focusMode) && isBlocked) {
+      unblockSite();
+      isBlocked = false;
+    }
+  });
 });
 
-chrome.runtime.onMessage.addListener(async (message) => {
-  const { blockedSites, focusMode, unblockTimes } = await chrome.storage.local.get();
-  const siteInBlockList = blockedSites.includes(domain);
-  const isUnblocked = unblockTimes[domain] > Date.now();
+// chrome.runtime.onMessage.addListener(async (message) => {
+//   const { blockedSites, focusMode, unblockTimes } = await chrome.storage.local.get();
+//   const siteInBlockList = blockedSites.includes(domain);
+//   const isUnblocked = unblockTimes[domain] > Date.now();
 
-  if (message === "Added To Block List" && !isUnblocked && focusMode) {
-    blockSite();
-  } else if (message === "Removed From Block List" && !isUnblocked && focusMode) {
-    unblockSite();
-  } else if (message === "Focus Mode Enabled" && !isUnblocked && siteInBlockList) {
-    blockSite();
-  } else if (message === "Focus Mode Disabled" && !isUnblocked && siteInBlockList) {
-    unblockSite();
-  }
-});
+//   if (message === "Added To Block List" && !isUnblocked && focusMode) {
+//     blockSite();
+//   } else if (message === "Removed From Block List" && !isUnblocked && focusMode) {
+//     unblockSite();
+//   } else if (message === "Focus Mode Enabled" && !isUnblocked && siteInBlockList) {
+//     blockSite();
+//   } else if (message === "Focus Mode Disabled" && !isUnblocked && siteInBlockList) {
+//     unblockSite();
+//   }
+// });

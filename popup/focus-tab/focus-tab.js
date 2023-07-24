@@ -20,7 +20,6 @@ const setupToggles = (isChromeInternalPage) => {
     focusToggle.addEventListener("click", () => {
       focusMode = !focusMode;
       focusToggle.textContent = focusMode ? "Disable Focus Mode" : "Enable Focus Mode";
-      chrome.tabs.sendMessage(tabs[0].id, focusMode ? "Focus Mode Enabled" : "Focus Mode Disabled");
       chrome.storage.local.set({ focusMode });
     });
   };
@@ -33,11 +32,9 @@ const setupToggles = (isChromeInternalPage) => {
       siteToggle.addEventListener("click", () => {
         if (blockedSites.includes(domain)) {
           blockedSites = blockedSites.filter((element) => element !== domain);
-          chrome.tabs.sendMessage(tabs[0].id, "Removed From Block List");
           siteToggle.textContent = "Add To Block List";
         } else {
           blockedSites.push(domain);
-          chrome.tabs.sendMessage(tabs[0].id, "Added To Block List");
           siteToggle.textContent = "Remove From Block List";
         }
         chrome.storage.local.set({ blockedSites });
@@ -50,7 +47,6 @@ const setupToggles = (isChromeInternalPage) => {
     listMode.addEventListener("click", () => {
       whiteListMode = !whiteListMode;
       listMode.textContent = whiteListMode ? "Enable Blocklist Mode" : "Enable Whitelist Mode";
-      chrome.tabs.sendMessage(tabs[0].id, whiteListMode ? "Whitelist Mode Enabled" : "Blocklist Mode Enabled");
       chrome.storage.local.set({ whiteListMode });
     });
   };
