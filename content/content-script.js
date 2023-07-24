@@ -160,18 +160,26 @@ window.addEventListener("focus", () => {
 });
 
 chrome.storage.local.get().then((storage) => {
-  const siteInBlockList = storage.blockedSites.includes(domain);
-  const isUnblocked = storage.unblockTimes[domain] > Date.now();
-  const { focusMode } = storage;
+  let siteInBlockList = storage.blockedSites.includes(domain);
+  let { focusMode } = storage;
 
-  if (siteInBlockList && !isUnblocked && focusMode) {
-    blockSite();
-  } else if (siteInBlockList) {
-    const timeUntilUnblock = storage.unblockTimes[domain] - Date.now();
+  const timeUntilUnblock = storage.unblockTimes[domain] - Date.now();
+
+  if (siteInBlockList && focusMode) {
     if (timeUntilUnblock >= 0) {
       setTimeout(blockSite, timeUntilUnblock);
+    } else {
+      blockSite();
     }
   }
+
+  // chrome.storage.onChanged.addListener((changes) => {
+  //   if (changes.blockedSites) {
+  //     siteInBlockList = changes.blockedSites.newValue.includes(domain);
+  //   } else if (changes.focusMode) {
+  //     focusMode = changes.focusMode.newValue;
+  //   }
+  // });
 });
 
 chrome.runtime.onMessage.addListener(async (message) => {
