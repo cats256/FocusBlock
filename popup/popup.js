@@ -18,7 +18,7 @@ const setupPomodoroTimerBtn = () => {
     settingsButton.style.backgroundColor = "";
     powerSettings.style.backgroundColor = "";
 
-    document.getElementById("focus-block").textContent = "Pomorodo Timer";
+    document.getElementById("focus-block").textContent = "Pomodoro Timer";
   });
 };
 

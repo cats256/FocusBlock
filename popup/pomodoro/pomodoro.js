@@ -8,9 +8,7 @@ const cyclesInput = document.getElementById("cycles");
 
 const startButton = document.getElementById("start");
 const resetButton = document.getElementById("reset");
-
 const clock = document.getElementById("clock");
-const type = document.getElementById("type");
 
 const storage = await chrome.storage.local.get();
 
@@ -21,7 +19,7 @@ const resetPomodoro = () => {
   clearInterval(pomodoroTimer);
 
   clock.textContent = "00:00";
-  type.textContent = "Do More With Pomodoro";
+  startButton.textContent = "Start Session";
 
   pomodoroEnabled = false;
   pomodoroInformation = {};
@@ -40,7 +38,7 @@ const changeTime = () => {
     const sessionType = nextTimeIndex % 2 === 1 ? "Focus" : "Break";
 
     clock.textContent = `${minutes}:${seconds}`;
-    type.textContent = `${sessionType} Session ${Math.floor((nextTimeIndex + 1) / 2)}`;
+    startButton.textContent = `${sessionType} Cycle ${Math.floor((nextTimeIndex + 1) / 2)}`;
   }
 };
 
