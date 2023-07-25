@@ -131,7 +131,6 @@ const blockSite = () => {
   const fifteenMinTimeout = shadowRoot.getElementById("15-min-timeout");
 
   const setUnblockTime = (timeout) => {
-    chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + timeout } });
     unblockSite();
     setTimeout(async () => {
       const { blockedSites, focusMode } = await chrome.storage.local.get();
@@ -141,6 +140,7 @@ const blockSite = () => {
         blockSite();
       }
     }, timeout);
+    chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + timeout } });
   };
 
   threeMinTimeout.addEventListener("click", () => setUnblockTime(3 * 60 * 1000));
@@ -189,7 +189,7 @@ chrome.storage.local.get().then((storage) => {
 
     isCurrentlyUnblocked = Date.now() < unblockEndTime;
 
-    if (siteInBlockList && focusMode && !isCurrentlyUnblocked) {
+    if (siteInBlockList && focusMode && !isCurrentlyBlocked && !isCurrentlyUnblocked) {
       blockSite();
       isCurrentlyBlocked = true;
     } else if ((!siteInBlockList || !focusMode) && isCurrentlyBlocked) {
