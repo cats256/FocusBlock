@@ -187,9 +187,9 @@ chrome.storage.local.get().then((storage) => {
       unblockEndTime = changes.unblockTimes.newValue[domain];
     }
 
-    isCurrentlyUnblocked = unblockEndTime > Date.now();
+    isCurrentlyUnblocked = Date.now() < unblockEndTime;
 
-    if (siteInBlockList && focusMode && !isCurrentlyBlocked && !isCurrentlyUnblocked) {
+    if (siteInBlockList && focusMode && !isCurrentlyUnblocked) {
       blockSite();
       isCurrentlyBlocked = true;
     } else if ((!siteInBlockList || !focusMode) && isCurrentlyBlocked) {
