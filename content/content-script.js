@@ -162,17 +162,20 @@ window.addEventListener("focus", () => {
 chrome.storage.local.get().then((storage) => {
   let siteInBlockList = storage.blockedSites.includes(domain);
   let { focusMode } = storage;
-  let timeUntilUnblock = storage.unblockTimes[domain] - Date.now();
+  let unblockEndTime = storage.unblockTimes[domain];
 
-  let isBlocked = siteInBlockList && focusMode && !(timeUntilUnblock >= 0);
+  let isCurrentlyUnblocked = Date.now() < unblockEndTime;
 
-  if (isBlocked) {
+  let isCurrentlyBlocked;
+
+  if (siteInBlockList && focusMode && !isCurrentlyUnblocked) {
     blockSite();
+    isCurrentlyBlocked = true;
   } else if (siteInBlockList && focusMode) {
     setTimeout(() => {
       blockSite();
-      isBlocked = true;
-    }, timeUntilUnblock);
+      isCurrentlyBlocked = true;
+    }, unblockEndTime - Date.now());
   }
 
   chrome.storage.onChanged.addListener((changes) => {
@@ -181,15 +184,17 @@ chrome.storage.local.get().then((storage) => {
     } else if (changes.focusMode) {
       focusMode = changes.focusMode.newValue;
     } else if (changes.unblockTimes) {
-      timeUntilUnblock = changes.unblockTimes.newValue[domain] - Date.now();
+      unblockEndTime = changes.unblockTimes.newValue[domain];
     }
 
-    if (siteInBlockList && focusMode && !isBlocked && !(timeUntilUnblock >= 0)) {
+    isCurrentlyUnblocked = unblockEndTime > Date.now();
+
+    if (siteInBlockList && focusMode && !isCurrentlyBlocked && !isCurrentlyUnblocked) {
       blockSite();
-      isBlocked = true;
-    } else if (!(siteInBlockList && focusMode) && isBlocked) {
+      isCurrentlyBlocked = true;
+    } else if ((!siteInBlockList || !focusMode) && isCurrentlyBlocked) {
       unblockSite();
-      isBlocked = false;
+      isCurrentlyBlocked = false;
     }
   });
 });
