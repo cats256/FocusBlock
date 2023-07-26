@@ -43,6 +43,7 @@ settingsButton.addEventListener("click", () => {
   powerSettings.style.backgroundColor = "";
 
   focusBlock.textContent = "Settings";
+  chrome.runtime.openOptionsPage();
 });
 
 // For debugging
