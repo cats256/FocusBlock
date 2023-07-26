@@ -149,10 +149,10 @@ const blockSite = () => {
 };
 
 let tabStartTime = Date.now();
-const date = new Date();
 
 window.addEventListener("blur", async () => {
   const { tabsTime } = await chrome.storage.local.get();
+  const date = new Date();
   const dateString = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
 
   tabsTime[dateString] = tabsTime[dateString] ?? {};

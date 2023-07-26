@@ -60,12 +60,15 @@ const setupStatistics = (tabsTime, isChromeInternalPage) => {
   const siteTodayUsage = document.getElementById("site-today-usage");
   const sitesTodayUsage = document.getElementById("sites-today-usage");
 
+  const date = new Date();
+  const dateString = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
+
   const setupSiteTodayUsage = () => {
     if (isChromeInternalPage) {
       siteTodayUsage.textContent = "Page Not Applicable";
-    } else {
-      const siteHrs = Math.floor((tabsTime[domain] ?? 0) / 3600000);
-      const siteMins = Math.floor(((tabsTime[domain] ?? 0) % 3600000) / 60000);
+    } else if (tabsTime[dateString]) {
+      const siteHrs = Math.floor((tabsTime[dateString][domain] ?? 0) / 3600000);
+      const siteMins = Math.floor(((tabsTime[dateString][domain] ?? 0) % 3600000) / 60000);
       siteTodayUsage.textContent = `This Site: ${siteHrs} ${siteHrs === 0 ? "hr" : "hrs"} ${siteMins} ${
         siteMins === 0 ? "min" : "mins"
       }`;
@@ -73,12 +76,14 @@ const setupStatistics = (tabsTime, isChromeInternalPage) => {
   };
 
   const setupSitesTodayUsage = () => {
-    const sitesTodaySeconds = Object.values(tabsTime).reduce((acc, curr) => acc + curr, 0);
-    const sitesHrs = Math.floor(sitesTodaySeconds / 3600000);
-    const sitesMins = Math.floor((sitesTodaySeconds % 3600000) / 60000);
-    sitesTodayUsage.textContent = `All Sites: ${sitesHrs} ${sitesHrs === 0 ? "hr" : "hrs"} ${sitesMins} ${
-      sitesMins === 0 ? "min" : "mins"
-    }`;
+    if (tabsTime[dateString]) {
+      const sitesTodaySeconds = Object.values(tabsTime[dateString]).reduce((acc, curr) => acc + curr, 0);
+      const sitesHrs = Math.floor(sitesTodaySeconds / 3600000);
+      const sitesMins = Math.floor((sitesTodaySeconds % 3600000) / 60000);
+      sitesTodayUsage.textContent = `All Sites: ${sitesHrs} ${sitesHrs === 0 ? "hr" : "hrs"} ${sitesMins} ${
+        sitesMins === 0 ? "min" : "mins"
+      }`;
+    }
   };
 
   setupSiteTodayUsage();
