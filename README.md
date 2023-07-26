@@ -10,11 +10,11 @@ Async/await, shadow DOM, web-accessible resource, etc,...
 
 ### Ideas to implement
 
-- Restrict Focus/Break minutes time select to two digits only
+~~- Restrict Focus/Break minutes time select to two digits only~~
 
 - Allow importing / exporting data
 
-- For production branch download and combine all files needed for popup.js into one file
+~~- For production branch download and combine all files needed for popup.js into one file~~
 
 - Toggle whether user wants an alert
 
