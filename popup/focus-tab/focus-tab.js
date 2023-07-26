@@ -57,11 +57,15 @@ const setupToggles = (isChromeInternalPage) => {
 };
 
 const setupStatistics = (tabsTime, isChromeInternalPage) => {
+  const dateToString = (date) => `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+
   const siteTodayUsage = document.getElementById("site-today-usage");
   const sitesTodayUsage = document.getElementById("sites-today-usage");
+  const siteWeekUsage = document.getElementById("site-week-usage");
+  // const sitesWeekUsage = document.getElementById("sites-week-usage");
 
   const date = new Date();
-  const dateString = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
+  const dateString = dateToString(date);
 
   const setupSiteTodayUsage = () => {
     if (isChromeInternalPage) {
@@ -72,6 +76,8 @@ const setupStatistics = (tabsTime, isChromeInternalPage) => {
       siteTodayUsage.textContent = `This Site: ${siteHrs} ${siteHrs === 0 ? "hr" : "hrs"} ${siteMins} ${
         siteMins === 0 ? "min" : "mins"
       }`;
+    } else {
+      siteTodayUsage.textContent = "This Site: 0 hr 0 min";
     }
   };
 
@@ -83,11 +89,43 @@ const setupStatistics = (tabsTime, isChromeInternalPage) => {
       sitesTodayUsage.textContent = `All Sites: ${sitesHrs} ${sitesHrs === 0 ? "hr" : "hrs"} ${sitesMins} ${
         sitesMins === 0 ? "min" : "mins"
       }`;
+    } else {
+      sitesTodayUsage.textContent = "All Sites: 0 hr 0 min";
+    }
+  };
+
+  const prevWeekMonday = new Date();
+  const prevWeekSunday = new Date();
+
+  prevWeekMonday.setDate(date.getDate() - date.getDay() + 1 - 7);
+  prevWeekSunday.setDate(date.getDate() - date.getDay());
+
+  const prevWeekMondayStr = dateToString(prevWeekMonday);
+  const prevWeekSundayStr = dateToString(prevWeekSunday);
+
+  const setupSiteWeekUsage = () => {
+    if (isChromeInternalPage) {
+      siteWeekUsage.textContent = "Page Not Applicable";
+    } else if (tabsTime[dateString]) {
+      const siteWeekSeconds = Object.keys(tabsTime).reduce((acc, dateKey) => {
+        if (dateKey >= prevWeekMondayStr && dateKey <= prevWeekSundayStr) {
+          return acc + (tabsTime[dateKey][domain] ?? 0);
+        }
+        return acc;
+      }, 0);
+      const siteHrs = Math.floor(siteWeekSeconds / 3600000);
+      const siteMins = Math.floor((siteWeekSeconds % 3600000) / 60000);
+      siteWeekUsage.textContent = `This Site: ${siteHrs} ${siteHrs === 0 ? "hr" : "hrs"} ${siteMins} ${
+        siteMins === 0 ? "min" : "mins"
+      }`;
+    } else {
+      siteWeekUsage.textContent = "This Site: 0 hr 0 min";
     }
   };
 
   setupSiteTodayUsage();
   setupSitesTodayUsage();
+  setupSiteWeekUsage();
 };
 
 const setupFocusTab = () => {
