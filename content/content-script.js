@@ -153,7 +153,7 @@ let tabStartTime = Date.now();
 window.addEventListener("blur", async () => {
   const { tabsTime } = await chrome.storage.local.get();
   const date = new Date();
-  const dateString = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
+  const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
   tabsTime[dateString] = tabsTime[dateString] ?? {};
   tabsTime[dateString][domain] = (tabsTime[dateString][domain] ?? 0) + (Date.now() - tabStartTime);
