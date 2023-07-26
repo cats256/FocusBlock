@@ -107,12 +107,13 @@ const setupStatistics = (tabsTime, isChromeInternalPage) => {
     if (isChromeInternalPage) {
       siteWeekUsage.textContent = "Page Not Applicable";
     } else {
-      const siteWeekSeconds = Object.keys(tabsTime).reduce((acc, dateKey) => {
-        if (prevWeekMondayStr <= dateKey && dateKey <= prevWeekSundayStr) {
-          return acc + (tabsTime[dateKey][domain] ?? 0);
-        }
-        return acc;
-      }, 0);
+      const siteWeekSeconds =
+        Object.keys(tabsTime).reduce((acc, dateKey) => {
+          if (prevWeekMondayStr <= dateKey && dateKey <= prevWeekSundayStr) {
+            return acc + (tabsTime[dateKey][domain] ?? 0);
+          }
+          return acc;
+        }, 0) / 7;
       const siteHrs = Math.floor(siteWeekSeconds / 3600000);
       const siteMins = Math.floor((siteWeekSeconds % 3600000) / 60000);
       siteWeekUsage.textContent = `This Site: ${siteHrs} ${siteHrs === 0 ? "hr" : "hrs"} ${siteMins} ${
@@ -122,12 +123,13 @@ const setupStatistics = (tabsTime, isChromeInternalPage) => {
   };
 
   const setupSitesWeekUsage = () => {
-    const sitesWeekSeconds = Object.keys(tabsTime).reduce((acc, dateKey) => {
-      if (prevWeekMondayStr <= dateKey && dateKey <= prevWeekSundayStr) {
-        return acc + Object.values(tabsTime[dateKey]).reduce((acc2, curr) => acc2 + curr, 0);
-      }
-      return acc;
-    }, 0);
+    const sitesWeekSeconds =
+      Object.keys(tabsTime).reduce((acc, dateKey) => {
+        if (prevWeekMondayStr <= dateKey && dateKey <= prevWeekSundayStr) {
+          return acc + Object.values(tabsTime[dateKey]).reduce((acc2, curr) => acc2 + curr, 0);
+        }
+        return acc;
+      }, 0) / 7;
     const sitesHrs = Math.floor(sitesWeekSeconds / 3600000);
     const sitesMins = Math.floor((sitesWeekSeconds % 3600000) / 60000);
     sitesWeekUsage.textContent = `All Sites: ${sitesHrs} ${sitesHrs === 0 ? "hr" : "hrs"} ${sitesMins} ${

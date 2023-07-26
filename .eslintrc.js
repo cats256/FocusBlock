@@ -22,6 +22,7 @@ module.exports = {
         ExportDeclaration: { consistent: true },
       },
     ],
+    "operator-linebreak": ["error", "after"],
   },
   globals: {
     chrome: "readonly",
