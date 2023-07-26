@@ -10,8 +10,6 @@ Async/await, shadow DOM, web-accessible resource, etc,...
 
 ### Ideas to implement
 
-- Make chrome.storage.local.get(["key"]) specific to each function to improve performance
-
 - Restrict Focus/Break minutes time select to two digits only
 
 - Allow importing / exporting data
@@ -29,6 +27,8 @@ Async/await, shadow DOM, web-accessible resource, etc,...
 - Do unit test
 
 - Whitelist mode
+
+- Make chrome.storage.local.get(["key"]) specific to each function to improve performance
 
 - Add title / alt to buttons
 
