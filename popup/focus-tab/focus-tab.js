@@ -62,7 +62,7 @@ const setupStatistics = (tabsTime, isChromeInternalPage) => {
   const siteTodayUsage = document.getElementById("site-today-usage");
   const sitesTodayUsage = document.getElementById("sites-today-usage");
   const siteWeekUsage = document.getElementById("site-week-usage");
-  // const sitesWeekUsage = document.getElementById("sites-week-usage");
+  const sitesWeekUsage = document.getElementById("sites-week-usage");
 
   const date = new Date();
   const dateString = dateToString(date);
@@ -106,9 +106,9 @@ const setupStatistics = (tabsTime, isChromeInternalPage) => {
   const setupSiteWeekUsage = () => {
     if (isChromeInternalPage) {
       siteWeekUsage.textContent = "Page Not Applicable";
-    } else if (tabsTime[dateString]) {
+    } else {
       const siteWeekSeconds = Object.keys(tabsTime).reduce((acc, dateKey) => {
-        if (dateKey >= prevWeekMondayStr && dateKey <= prevWeekSundayStr) {
+        if (prevWeekMondayStr <= dateKey && dateKey <= prevWeekSundayStr) {
           return acc + (tabsTime[dateKey][domain] ?? 0);
         }
         return acc;
@@ -118,14 +118,27 @@ const setupStatistics = (tabsTime, isChromeInternalPage) => {
       siteWeekUsage.textContent = `This Site: ${siteHrs} ${siteHrs === 0 ? "hr" : "hrs"} ${siteMins} ${
         siteMins === 0 ? "min" : "mins"
       }`;
-    } else {
-      siteWeekUsage.textContent = "This Site: 0 hr 0 min";
     }
+  };
+
+  const setupSitesWeekUsage = () => {
+    const sitesWeekSeconds = Object.keys(tabsTime).reduce((acc, dateKey) => {
+      if (prevWeekMondayStr <= dateKey && dateKey <= prevWeekSundayStr) {
+        return acc + Object.values(tabsTime[dateKey]).reduce((acc2, curr) => acc2 + curr, 0);
+      }
+      return acc;
+    }, 0);
+    const sitesHrs = Math.floor(sitesWeekSeconds / 3600000);
+    const sitesMins = Math.floor((sitesWeekSeconds % 3600000) / 60000);
+    sitesWeekUsage.textContent = `All Sites: ${sitesHrs} ${sitesHrs === 0 ? "hr" : "hrs"} ${sitesMins} ${
+      sitesMins === 0 ? "min" : "mins"
+    }`;
   };
 
   setupSiteTodayUsage();
   setupSitesTodayUsage();
   setupSiteWeekUsage();
+  setupSitesWeekUsage();
 };
 
 const setupFocusTab = () => {
