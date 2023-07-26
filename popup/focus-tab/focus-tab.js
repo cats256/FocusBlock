@@ -2,7 +2,7 @@ const focusTabHTML = await fetch("focus-tab/focus-tab.html");
 const focusTabHTMLText = await focusTabHTML.text();
 document.getElementById("focus-tab").innerHTML = focusTabHTMLText;
 
-const storage = await chrome.storage.local.get();
+const storage = await chrome.storage.local.get(["focusMode", "blockedSites", "whiteListMode", "tabsTime"]);
 
 const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
 const url = new URL(tabs[0].url);
