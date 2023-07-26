@@ -10,16 +10,36 @@ const startButton = document.getElementById("start");
 const resetButton = document.getElementById("reset");
 const clock = document.getElementById("clock");
 
-const storage = await chrome.storage.local.get();
+const storage = await chrome.storage.local.get(["pomodoroEnabled", "pomodoroInformation"]);
 
 let { pomodoroEnabled, pomodoroInformation } = storage;
 let pomodoroTimer;
+
+let focusMinutes = parseInt(focusMinutesInput.value, 10);
+let breakMinutes = parseInt(breakMinutesInput.value, 10);
+let cycles = parseInt(cyclesInput.value, 10);
+
+const keepFocusMinutesInputUnchanged = () => {
+  focusMinutesInput.value = focusMinutes;
+};
+
+const keepBreakMinutesInputUnchanged = () => {
+  breakMinutesInput.value = breakMinutes;
+};
+
+const keepCyclesInputUnchanged = () => {
+  cyclesInput.value = cycles;
+};
 
 const resetPomodoro = () => {
   clearInterval(pomodoroTimer);
 
   clock.textContent = "00:00";
   startButton.textContent = "Start Session";
+
+  focusMinutesInput.removeEventListener("input", keepFocusMinutesInputUnchanged);
+  breakMinutesInput.removeEventListener("input", keepBreakMinutesInputUnchanged);
+  cyclesInput.removeEventListener("input", keepCyclesInputUnchanged);
 
   pomodoroEnabled = false;
   pomodoroInformation = {};
@@ -42,11 +62,53 @@ const changeTime = () => {
   }
 };
 
+const resume = async () => {
+  if (pomodoroEnabled) {
+    pomodoroTimer = setInterval(changeTime, 100);
+
+    focusMinutesInput.value = focusMinutes;
+    breakMinutesInput.value = breakMinutes;
+    cyclesInput.value = cycles;
+
+    focusMinutesInput.addEventListener("input", keepFocusMinutesInputUnchanged);
+    breakMinutesInput.addEventListener("input", keepBreakMinutesInputUnchanged);
+    cyclesInput.addEventListener("input", keepCyclesInputUnchanged);
+  }
+
+  focusMinutesInput.addEventListener("input", () => {
+    if (focusMinutesInput.value < 1) {
+      focusMinutesInput.value = 1;
+    } else if (focusMinutesInput.value > 999) {
+      focusMinutesInput.value = 999;
+    }
+  });
+
+  breakMinutesInput.addEventListener("input", () => {
+    if (breakMinutesInput.value < 1) {
+      breakMinutesInput.value = 1;
+    } else if (breakMinutesInput.value > 999) {
+      breakMinutesInput.value = 999;
+    }
+  });
+
+  cyclesInput.addEventListener("input", () => {
+    if (cyclesInput.value < 1) {
+      cyclesInput.value = 1;
+    } else if (cyclesInput.value > 999) {
+      cyclesInput.value = 999;
+    }
+  });
+};
+
+resume();
+
+focusMinutesInput.addEventListener("input", () => {});
+
 startButton.addEventListener("click", () => {
   if (!pomodoroEnabled) {
-    const focusMinutes = parseInt(focusMinutesInput.value, 10);
-    const breakMinutes = parseInt(breakMinutesInput.value, 10);
-    const cycles = parseInt(cyclesInput.value, 10);
+    focusMinutes = parseInt(focusMinutesInput.value, 10);
+    breakMinutes = parseInt(breakMinutesInput.value, 10);
+    cycles = parseInt(cyclesInput.value, 10);
 
     const cyclesTimes = [];
     const currentTime = Date.now();
@@ -63,6 +125,10 @@ startButton.addEventListener("click", () => {
     pomodoroEnabled = true;
     pomodoroInformation = { focusMinutes, breakMinutes, cycles, cyclesTimes };
     chrome.storage.local.set({ pomodoroEnabled, pomodoroInformation });
+
+    focusMinutesInput.addEventListener("input", keepFocusMinutesInputUnchanged);
+    breakMinutesInput.addEventListener("input", keepBreakMinutesInputUnchanged);
+    cyclesInput.addEventListener("input", keepCyclesInputUnchanged);
   }
 });
 
@@ -71,11 +137,3 @@ resetButton.addEventListener("click", () => {
     resetPomodoro();
   }
 });
-
-const resume = async () => {
-  if (pomodoroEnabled) {
-    pomodoroTimer = setInterval(changeTime, 1000);
-  }
-};
-
-resume();
