@@ -192,7 +192,7 @@ chrome.storage.local.get().then((storage) => {
     if (siteInBlockList && focusMode && !isCurrentlyBlocked && !isCurrentlyUnblocked) {
       blockSite();
       isCurrentlyBlocked = true;
-    } else if ((!siteInBlockList || !focusMode) && isCurrentlyBlocked) {
+    } else if ((!siteInBlockList || !focusMode) && isCurrentlyBlocked && !isCurrentlyUnblocked) {
       unblockSite();
       isCurrentlyBlocked = false;
     }
