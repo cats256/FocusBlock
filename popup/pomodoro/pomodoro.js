@@ -2,34 +2,31 @@ const pomodoroHTML = await fetch("pomodoro/pomodoro.html");
 const pomodoroHTMLText = await pomodoroHTML.text();
 document.getElementById("pomodoro-timer").innerHTML = pomodoroHTMLText;
 
-const focusMinutesInput = document.getElementById("focus-minutes");
-const breakMinutesInput = document.getElementById("break-minutes");
-const cyclesInput = document.getElementById("cycles");
-
 const startButton = document.getElementById("start");
 const resetButton = document.getElementById("reset");
 const clock = document.getElementById("clock");
 
 const storage = await chrome.storage.local.get(["pomodoroEnabled", "pomodoroInformation"]);
-
 let { pomodoroEnabled, pomodoroInformation } = storage;
+
+const focusMinutesInput = document.getElementById("focus-minutes");
+const breakMinutesInput = document.getElementById("break-minutes");
+const cyclesInput = document.getElementById("cycles");
+
 let pomodoroTimer;
 
 let focusMinutes = parseInt(focusMinutesInput.value, 10);
 let breakMinutes = parseInt(breakMinutesInput.value, 10);
 let cycles = parseInt(cyclesInput.value, 10);
 
-const keepFocusMinutesInputUnchanged = () => {
-  focusMinutesInput.value = focusMinutes;
+const keepInputUnchanged = (inputElement, value) => {
+  const inputElementCopy = inputElement;
+  inputElementCopy.value = value;
 };
 
-const keepBreakMinutesInputUnchanged = () => {
-  breakMinutesInput.value = breakMinutes;
-};
-
-const keepCyclesInputUnchanged = () => {
-  cyclesInput.value = cycles;
-};
+const keepFocusMinutesUnchanged = () => keepInputUnchanged(focusMinutesInput, focusMinutes);
+const keepBreakMinutesUnchanged = () => keepInputUnchanged(breakMinutesInput, breakMinutes);
+const keepCyclesUnchanged = () => keepInputUnchanged(cyclesInput, cycles);
 
 const resetPomodoro = () => {
   clearInterval(pomodoroTimer);
@@ -37,9 +34,9 @@ const resetPomodoro = () => {
   clock.textContent = "00:00";
   startButton.textContent = "Start Session";
 
-  focusMinutesInput.removeEventListener("input", keepFocusMinutesInputUnchanged);
-  breakMinutesInput.removeEventListener("input", keepBreakMinutesInputUnchanged);
-  cyclesInput.removeEventListener("input", keepCyclesInputUnchanged);
+  focusMinutesInput.removeEventListener("input", keepFocusMinutesUnchanged);
+  breakMinutesInput.removeEventListener("input", keepBreakMinutesUnchanged);
+  cyclesInput.removeEventListener("input", keepCyclesUnchanged);
 
   pomodoroEnabled = false;
   pomodoroInformation = {};
@@ -62,47 +59,31 @@ const changeTime = () => {
   }
 };
 
-const resume = async () => {
-  if (pomodoroEnabled) {
-    pomodoroTimer = setInterval(changeTime, 100);
+const resumePomodoro = async () => {
+  pomodoroTimer = setInterval(changeTime, 100);
 
-    focusMinutesInput.value = focusMinutes;
-    breakMinutesInput.value = breakMinutes;
-    cyclesInput.value = cycles;
+  focusMinutesInput.value = focusMinutes;
+  breakMinutesInput.value = breakMinutes;
+  cyclesInput.value = cycles;
 
-    focusMinutesInput.addEventListener("input", keepFocusMinutesInputUnchanged);
-    breakMinutesInput.addEventListener("input", keepBreakMinutesInputUnchanged);
-    cyclesInput.addEventListener("input", keepCyclesInputUnchanged);
-  }
-
-  focusMinutesInput.addEventListener("input", () => {
-    if (focusMinutesInput.value < 1) {
-      focusMinutesInput.value = 1;
-    } else if (focusMinutesInput.value > 999) {
-      focusMinutesInput.value = 999;
-    }
-  });
-
-  breakMinutesInput.addEventListener("input", () => {
-    if (breakMinutesInput.value < 1) {
-      breakMinutesInput.value = 1;
-    } else if (breakMinutesInput.value > 999) {
-      breakMinutesInput.value = 999;
-    }
-  });
-
-  cyclesInput.addEventListener("input", () => {
-    if (cyclesInput.value < 1) {
-      cyclesInput.value = 1;
-    } else if (cyclesInput.value > 999) {
-      cyclesInput.value = 999;
-    }
-  });
+  focusMinutesInput.addEventListener("input", keepFocusMinutesUnchanged);
+  breakMinutesInput.addEventListener("input", keepBreakMinutesUnchanged);
+  cyclesInput.addEventListener("input", keepCyclesUnchanged);
 };
 
-resume();
+const restrictInputRange = (inputElement) => {
+  const inputElementCopy = inputElement;
 
-focusMinutesInput.addEventListener("input", () => {});
+  if (inputElement.value < 1) {
+    inputElementCopy.value = 1;
+  } else if (inputElement.value > 999) {
+    inputElementCopy.value = 999;
+  }
+};
+
+focusMinutesInput.addEventListener("input", () => restrictInputRange(focusMinutesInput));
+breakMinutesInput.addEventListener("input", () => restrictInputRange(breakMinutesInput));
+cyclesInput.addEventListener("input", () => restrictInputRange(cyclesInput));
 
 startButton.addEventListener("click", () => {
   if (!pomodoroEnabled) {
@@ -126,9 +107,9 @@ startButton.addEventListener("click", () => {
     pomodoroInformation = { focusMinutes, breakMinutes, cycles, cyclesTimes };
     chrome.storage.local.set({ pomodoroEnabled, pomodoroInformation });
 
-    focusMinutesInput.addEventListener("input", keepFocusMinutesInputUnchanged);
-    breakMinutesInput.addEventListener("input", keepBreakMinutesInputUnchanged);
-    cyclesInput.addEventListener("input", keepCyclesInputUnchanged);
+    focusMinutesInput.addEventListener("input", keepFocusMinutesUnchanged);
+    breakMinutesInput.addEventListener("input", keepBreakMinutesUnchanged);
+    cyclesInput.addEventListener("input", keepCyclesUnchanged);
   }
 });
 
@@ -137,3 +118,7 @@ resetButton.addEventListener("click", () => {
     resetPomodoro();
   }
 });
+
+if (pomodoroEnabled) {
+  resumePomodoro();
+}
