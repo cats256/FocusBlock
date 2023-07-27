@@ -10,15 +10,17 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="options.css" />
-    <script src="options.js" defer></script>
+    <script src="options.js" type="module"></script>
   </head>
   <title>FocusBlock</title>
   <body>
-    <label>choose a background image</label>
+    <label>blocked page icon</label>
     <select id="background-img-dropdown">
-      <option value="icons/icon.png">focus-block</option>
       <option value="icons/dangerous.svg">dangerous</option>
       <option value="icons/lotus.svg">lotus</option>
+      <option value="icons/icon.png">focus-block</option>
     </select>
+    <br />
+    <img id="background-img-preview" src="../icons/dangerous.svg" alt="background-image-preview" />
   </body>
 </html>
