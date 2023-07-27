@@ -104,11 +104,11 @@ const blockSite = (backgroundImg, quoteParameter) => {
       <img id="icon" src="${chrome.runtime.getURL(backgroundImg)}"/>
       <p id="quote">${quoteParameter}</p>
       <div id="button-container">
-        <button title="Open Settings" id="setting">Settings</button>
+        <button title="Unblock Site For 1 Minute" id="1-min-timeout">+1 minute</button>
         <button title="Unblock Site For 3 Minutes" id="3-min-timeout">+3 minutes</button>
         <button title="Unblock Site For 10 Minutes" id="10-min-timeout">+10 minutes</button>
         <button title="Unblock Site For 15 Minutes" id="15-min-timeout">+15 minutes</button>
-        <button title="Set Site Unblock Time" id="set-extend">Set Timeout</button>
+        <button title="Unblock Site For 30 Minute" id="30-min-timeout">+30 minutes</button>
       </div>
     </div>
     </div>
@@ -126,9 +126,11 @@ const blockSite = (backgroundImg, quoteParameter) => {
   const shadowRoot = focusBlock.attachShadow({ mode: "closed" });
   shadowRoot.innerHTML = CSS + HTMLpage;
 
+  const oneMinTimeout = shadowRoot.getElementById("1-min-timeout");
   const threeMinTimeout = shadowRoot.getElementById("3-min-timeout");
   const tenMinTimeout = shadowRoot.getElementById("10-min-timeout");
   const fifteenMinTimeout = shadowRoot.getElementById("15-min-timeout");
+  const thirtyMinTimeout = shadowRoot.getElementById("30-min-timeout");
 
   const setUnblockTime = (timeout) => {
     unblockSite();
@@ -143,9 +145,11 @@ const blockSite = (backgroundImg, quoteParameter) => {
     chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + timeout } });
   };
 
+  oneMinTimeout.addEventListener("click", () => setUnblockTime(1 * 60 * 1000));
   threeMinTimeout.addEventListener("click", () => setUnblockTime(3 * 60 * 1000));
   tenMinTimeout.addEventListener("click", () => setUnblockTime(10 * 60 * 1000));
   fifteenMinTimeout.addEventListener("click", () => setUnblockTime(15 * 60 * 1000));
+  thirtyMinTimeout.addEventListener("click", () => setUnblockTime(30 * 60 * 1000));
 };
 
 let tabStartTime = Date.now();
