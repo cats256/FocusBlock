@@ -1,0 +1,19 @@
+body {
+  font-family: "Inter", sans-serif !important;
+  font-size: 24px;
+  margin-top: 32px;
+  margin-left: 64px;
+  font-variant: small-caps !important;
+}
+
+select {
+  font-family: "Inter";
+  font-variant: small-caps;
+  border-radius: 0;
+  border: 1px solid #ccc;
+  padding-left: 16px;
+  font-size: 18px;
+  width: 160px;
+  height: 44px;
+  font-weight: 500;
+}
