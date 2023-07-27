@@ -6,7 +6,7 @@ const unblockSite = () => {
 const url = new URL(window.location.origin);
 const domain = url.host.replace("www.", "");
 
-const blockSite = (backgroundImg) => {
+const blockSite = (backgroundImg, quoteParameter) => {
   const headCSS = `
     @font-face {
       font-family: 'Inter';
@@ -102,7 +102,7 @@ const blockSite = (backgroundImg) => {
     <div id="panel">
       <p id="blocked">This site has been blocked by FocusBlock</p>
       <img id="icon" src="${chrome.runtime.getURL(backgroundImg)}"/>
-      <p id="quote">life begins at the end of your comfort zone</p>
+      <p id="quote">${quoteParameter}</p>
       <div id="button-container">
         <button title="Open Settings" id="setting">Settings</button>
         <button title="Unblock Site For 3 Minutes" id="3-min-timeout">+3 minutes</button>
@@ -133,11 +133,11 @@ const blockSite = (backgroundImg) => {
   const setUnblockTime = (timeout) => {
     unblockSite();
     setTimeout(async () => {
-      const { blockedSites, focusMode, backgroundImage } = await chrome.storage.local.get();
+      const { blockedSites, focusMode, backgroundImage, quote } = await chrome.storage.local.get();
       const siteInBlockList = blockedSites.includes(domain);
 
       if (siteInBlockList && focusMode) {
-        blockSite(backgroundImage);
+        blockSite(backgroundImage, quote);
       }
     }, timeout);
     chrome.storage.local.set({ unblockTimes: { [domain]: Date.now() + timeout } });
@@ -166,18 +166,18 @@ window.addEventListener("focus", () => {
 
 chrome.storage.local.get().then((storage) => {
   let siteInBlockList = storage.blockedSites.includes(domain);
-  let { focusMode, backgroundImage } = storage;
+  let { focusMode, backgroundImage, quote } = storage;
   let unblockEndTime = storage.unblockTimes[domain];
 
   let isCurrentlyUnblocked = Date.now() < unblockEndTime;
   let isCurrentlyBlocked;
 
   if (siteInBlockList && focusMode && !isCurrentlyUnblocked) {
-    blockSite(backgroundImage);
+    blockSite(backgroundImage, quote);
     isCurrentlyBlocked = true;
   } else if (siteInBlockList && focusMode) {
     setTimeout(() => {
-      blockSite(backgroundImage);
+      blockSite(backgroundImage, quote);
       isCurrentlyBlocked = true;
     }, unblockEndTime - Date.now());
   }
@@ -191,18 +191,26 @@ chrome.storage.local.get().then((storage) => {
       unblockEndTime = changes.unblockTimes.newValue[domain];
     } else if (changes.backgroundImage) {
       backgroundImage = changes.backgroundImage.newValue;
+
+      if (isCurrentlyBlocked && !isCurrentlyUnblocked) {
+        blockSite(backgroundImage, quote);
+      }
+    } else if (changes.quote) {
+      quote = changes.quote.newValue;
+
+      if (isCurrentlyBlocked && !isCurrentlyUnblocked) {
+        blockSite(backgroundImage, quote);
+      }
     }
 
     isCurrentlyUnblocked = Date.now() < unblockEndTime;
 
     if (siteInBlockList && focusMode && !isCurrentlyBlocked && !isCurrentlyUnblocked) {
-      blockSite(backgroundImage);
+      blockSite(backgroundImage, quote);
       isCurrentlyBlocked = true;
     } else if ((!siteInBlockList || !focusMode) && isCurrentlyBlocked && !isCurrentlyUnblocked) {
       unblockSite();
       isCurrentlyBlocked = false;
-    } else if (isCurrentlyBlocked && !isCurrentlyUnblocked) {
-      blockSite(backgroundImage);
     }
   });
 });

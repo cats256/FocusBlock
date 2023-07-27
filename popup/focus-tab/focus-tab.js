@@ -146,7 +146,7 @@ const setupStatistics = (tabsTime, isChromeInternalPage) => {
 const setupFocusTab = () => {
   const { tabsTime } = storage;
 
-  if (url.protocol === "chrome:") {
+  if (url.protocol === "chrome:" || url.protocol === "chrome-extension:") {
     setupToggles(true);
     setupStatistics(tabsTime, true);
   } else {

@@ -23,3 +23,35 @@ select {
   height: 336px;
   width: 336px;
 }
+
+label {
+  display: inline-block;
+  width: 180px;
+  box-sizing: border-box;
+}
+
+input {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  width: 340px;
+  text-transform: uppercase;
+  height: 32px;
+}
+
+button {
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  width: 60px;
+  height: 28px;
+  cursor: pointer;
+  background-color: rgb(245, 245, 245);
+  border: 1px solid rgb(150, 150, 150);
+  color: black;
+  text-align: center;
+  font-weight: 500;
+  font-variant: small-caps;
+  font-size: 15px;
+}
+
+button:hover {
+  background-color: rgb(220, 220, 220);
+}
