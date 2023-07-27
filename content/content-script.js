@@ -92,7 +92,7 @@ const HTMLpage = `
 <div>
 <div id="panel">
   <p id="blocked">This site has been blocked by FocusBlock</p>
-  <img id="icon" src="${chrome.runtime.getURL("icons/lotus.svg")}"/>
+  <img id="icon" src="${chrome.runtime.getURL("icons/dangerous.svg")}"/>
   <p id="quote">life begins at the end of your comfort zone</p>
   <div id="button-container">
     <button title="Open Settings" id="setting">Settings</button>
