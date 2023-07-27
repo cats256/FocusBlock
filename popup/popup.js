@@ -34,15 +34,6 @@ powerSettings.addEventListener("click", () => {
 });
 
 settingsButton.addEventListener("click", () => {
-  pomodoroTimer.style.display = "none";
-  focusTab.style.display = "none";
-  settingsTab.style.display = "block";
-
-  timer.style.backgroundColor = "";
-  settingsButton.style.backgroundColor = "rgb(205, 205, 205)";
-  powerSettings.style.backgroundColor = "";
-
-  focusBlock.textContent = "Settings";
   chrome.runtime.openOptionsPage();
 });
 
