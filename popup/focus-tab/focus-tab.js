@@ -11,9 +11,9 @@ const domain = url.host.replace("www.", "");
 const setupToggles = (isChromeInternalPage) => {
   const focusToggle = document.getElementById("focus-toggle");
   const siteToggle = document.getElementById("site-toggle");
-  const listMode = document.getElementById("list-mode");
+  // const listMode = document.getElementById("list-mode");
 
-  let { focusMode, blockedSites, whiteListMode } = storage;
+  let { focusMode, blockedSites } = storage;
 
   const setupFocusToggle = () => {
     focusToggle.textContent = focusMode ? "Disable Focus Mode" : "Enable Focus Mode";
@@ -42,18 +42,18 @@ const setupToggles = (isChromeInternalPage) => {
     }
   };
 
-  const setupListToggle = () => {
-    listMode.textContent = whiteListMode ? "Enable Blocklist Mode" : "Enable Whitelist Mode";
-    listMode.addEventListener("click", () => {
-      whiteListMode = !whiteListMode;
-      listMode.textContent = whiteListMode ? "Enable Blocklist Mode" : "Enable Whitelist Mode";
-      chrome.storage.local.set({ whiteListMode });
-    });
-  };
+  // const setupListToggle = () => {
+  //   listMode.textContent = whiteListMode ? "Enable Blocklist Mode" : "Enable Whitelist Mode";
+  //   listMode.addEventListener("click", () => {
+  //     whiteListMode = !whiteListMode;
+  //     listMode.textContent = whiteListMode ? "Enable Blocklist Mode" : "Enable Whitelist Mode";
+  //     chrome.storage.local.set({ whiteListMode });
+  //   });
+  // };
 
   setupFocusToggle();
   setupSiteToggle();
-  setupListToggle();
+  // setupListToggle();
 };
 
 const setupStatistics = (tabsTime, isChromeInternalPage) => {
@@ -159,6 +159,10 @@ const setupFocusTab = () => {
       }
     });
   }
+
+  document.getElementById("source-code").addEventListener("click", () => {
+    chrome.tabs.create({ url: "https://github.com/cats256/FocusBlock" });
+  });
 };
 
 setupFocusTab();
