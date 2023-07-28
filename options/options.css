@@ -1,7 +1,7 @@
 body {
   font-family: "Inter", sans-serif !important;
   font-size: 24px;
-  padding: 32px;
+  padding: 16px;
   font-variant: small-caps !important;
   display: flex;
   justify-content: center;
@@ -85,4 +85,38 @@ button:hover {
   width: 340px;
   display: flex;
   align-items: center;
+}
+
+#tabs-time-title {
+  margin: 8px 0px;
+}
+
+#tabs-time {
+  padding: 0px 0px 16px 0px;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  gap: 8px;
+}
+
+.date-div,
+#all-times-div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#all-times-div {
+  font-size: 18px;
+}
+
+.tabs-time-site {
+  font-variant: normal;
+  font-size: 12px;
+  display: flex;
+}
+
+.tabs-time-site :first-child {
+  width: 88px;
 }

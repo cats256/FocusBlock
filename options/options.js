@@ -9,8 +9,10 @@ const backgroundImagePreview = document.getElementById("background-img-preview")
 const saveButton = document.getElementById("save-button");
 const quoteInput = document.getElementById("quote-input");
 
-const storage = await chrome.storage.local.get(["backgroundImage", "blockedSites"]);
-const { backgroundImage } = storage;
+const tabsTimeDiv = document.getElementById("tabs-time");
+
+const storage = await chrome.storage.local.get(["backgroundImage", "blockedSites", "tabsTime"]);
+const { backgroundImage, tabsTime } = storage;
 
 let { blockedSites } = storage;
 
@@ -100,3 +102,54 @@ quoteInput.addEventListener("keydown", (e) => {
     quoteInput.value = "";
   }
 });
+
+const allTimeSitesUsage = {};
+
+Object.keys(tabsTime).forEach((dateString) => {
+  const dateDiv = document.createElement("div");
+  dateDiv.classList.add("date-div");
+  dateDiv.classList.add("collapsible");
+  dateDiv.textContent = dateString;
+
+  const sites = Object.keys(tabsTime[dateString]);
+  sites.sort((a, b) => tabsTime[dateString][b] - tabsTime[dateString][a]);
+  sites.forEach((site) => {
+    const sitesHrs = Math.floor(tabsTime[dateString][site] / 3600000);
+    const sitesMins = Math.floor((tabsTime[dateString][site] % 3600000) / 60000);
+    const tabTimeSite = document.createElement("div");
+
+    tabTimeSite.classList.add("tabs-time-site");
+    tabTimeSite.innerHTML = `
+    <div>${sitesHrs} ${sitesHrs === 0 ? "hr" : "hrs"} ${sitesMins} ${sitesMins === 0 ? "min" : "mins"}</div>
+    <div>${site}</div>
+    `;
+
+    dateDiv.appendChild(tabTimeSite);
+
+    allTimeSitesUsage[site] = (allTimeSitesUsage[site] ?? 0) + tabsTime[dateString][site];
+  });
+
+  tabsTimeDiv.insertBefore(dateDiv, tabsTimeDiv.firstChild);
+});
+
+const allTimesDiv = document.createElement("div");
+allTimesDiv.id = "all-times-div";
+allTimesDiv.textContent = "all time usage by site";
+
+const allTimeSites = Object.keys(allTimeSitesUsage);
+allTimeSites.sort((a, b) => allTimeSitesUsage[b] - allTimeSitesUsage[a]);
+allTimeSites.forEach((site) => {
+  const sitesHrs = Math.floor(allTimeSitesUsage[site] / 3600000);
+  const sitesMins = Math.floor((allTimeSitesUsage[site] % 3600000) / 60000);
+  const tabTimeSite = document.createElement("div");
+
+  tabTimeSite.classList.add("tabs-time-site");
+  tabTimeSite.innerHTML = `
+  <div>${sitesHrs} ${sitesHrs === 0 ? "hr" : "hrs"} ${sitesMins} ${sitesMins === 0 ? "min" : "mins"}</div>
+  <div>${site}</div>
+  `;
+
+  allTimesDiv.appendChild(tabTimeSite);
+});
+
+tabsTimeDiv.insertBefore(allTimesDiv, tabsTimeDiv.firstChild);
