@@ -14,17 +14,26 @@
   </head>
   <title>FocusBlock</title>
   <body>
-    <label>blocked page icon</label>
-    <select id="background-img-dropdown">
-      <option value="icons/dangerous.svg">dangerous</option>
-      <option value="icons/lotus.svg">lotus</option>
-      <option value="icons/icon.png">focus-block</option>
-    </select>
-    <br />
-    <img id="background-img-preview" src="../icons/dangerous.svg" alt="background-image-preview" />
-    <div>page quote</div>
-    <input id="quote-input" type="text" placeholder="life begins at the end of your comfort zone" />
-    <br />
-    <button id="save-button">save</button>
+    <div>
+      <div>blocked sites</div>
+      <div id="blocked-sites"></div>
+      <div id="add-site-container">
+        <input id="site-input" type="text" />
+        <button id="add-button">add</button>
+      </div>
+      <br />
+      <label>blocked page icon</label>
+      <select id="background-img-dropdown">
+        <option value="icons/dangerous.svg">dangerous</option>
+        <option value="icons/lotus.svg">lotus</option>
+        <option value="icons/icon.png">focus-block</option>
+      </select>
+      <br />
+      <img id="background-img-preview" src="../icons/dangerous.svg" alt="background-image-preview" />
+      <div>page quote</div>
+      <input id="quote-input" type="text" placeholder="life begins at the end of your comfort zone" />
+      <br />
+      <button id="save-button">save</button>
+    </div>
   </body>
 </html>

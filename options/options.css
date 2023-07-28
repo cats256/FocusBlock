@@ -1,9 +1,11 @@
 body {
   font-family: "Inter", sans-serif !important;
   font-size: 24px;
-  margin-top: 32px;
-  margin-left: 64px;
+  padding: 32px;
   font-variant: small-caps !important;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
 }
 
 select {
@@ -54,4 +56,33 @@ button {
 
 button:hover {
   background-color: rgb(220, 220, 220);
+}
+
+#blocked-sites {
+  width: 100%;
+  margin: 20px 0px;
+}
+
+.site {
+  font-size: 16px;
+  margin: 8px 0px;
+  width: 340px;
+  display: flex;
+}
+
+.remove-button,
+#add-button {
+  margin-left: auto;
+}
+
+#site-input {
+  width: 256px;
+  padding: 0px 10px 0px 4px;
+  margin: 0px;
+}
+
+#add-site-container {
+  width: 340px;
+  display: flex;
+  align-items: center;
 }
