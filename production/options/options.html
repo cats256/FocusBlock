@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0&family=Inter&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="options.css" />
+    <script src="options.js" type="module"></script>
+  </head>
+  <title>FocusBlock</title>
+  <body>
+    <div>
+      <div>blocked sites</div>
+      <div id="blocked-sites"></div>
+      <div id="add-site-container">
+        <input id="site-input" type="text" />
+        <button id="add-button">add</button>
+      </div>
+      <br />
+      <div id="tabs-time-title">tabs time</div>
+      <div id="tabs-time"></div>
+      <label>blocked page icon</label>
+      <select id="background-img-dropdown">
+        <option value="icons/dangerous.svg">dangerous</option>
+        <option value="icons/lotus.svg">lotus</option>
+        <option value="icons/icon.png">focus-block</option>
+      </select>
+      <br />
+      <img id="background-img-preview" src="../icons/dangerous.svg" alt="background-image-preview" />
+      <div>page quote</div>
+      <input id="quote-input" type="text" placeholder="life begins at the end of your comfort zone" />
+      <br />
+      <button id="save-button">save</button>
+    </div>
+  </body>
+</html>

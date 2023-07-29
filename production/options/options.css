@@ -1,0 +1,138 @@
+body {
+  font-family: "Inter", sans-serif !important;
+  font-size: 24px;
+  padding: 16px;
+  font-variant: small-caps !important;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+
+select {
+  font-family: "Inter";
+  font-variant: small-caps;
+  border-radius: 0;
+  border: 1px solid #ccc;
+  padding-left: 16px;
+  font-size: 18px;
+  width: 160px;
+  height: 44px;
+  font-weight: 500;
+}
+
+#background-img-preview {
+  margin-top: 16px;
+  height: 336px;
+  width: 336px;
+}
+
+label {
+  display: inline-block;
+  width: 180px;
+  box-sizing: border-box;
+}
+
+input {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  width: 340px;
+  text-transform: uppercase;
+  height: 32px;
+}
+
+button {
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  width: 60px;
+  height: 28px;
+  cursor: pointer;
+  background-color: rgb(245, 245, 245);
+  border: 1px solid rgb(150, 150, 150);
+  color: black;
+  text-align: center;
+  font-weight: 500;
+  font-variant: small-caps;
+  font-size: 15px;
+}
+
+button:hover {
+  background-color: rgb(220, 220, 220);
+}
+
+#blocked-sites {
+  width: 100%;
+  margin: 20px 0px;
+}
+
+.site {
+  font-size: 16px;
+  margin: 8px 0px;
+  width: 340px;
+  display: flex;
+}
+
+.remove-button,
+#add-button {
+  margin-left: auto;
+}
+
+#site-input {
+  width: 256px;
+  padding: 0px 10px 0px 4px;
+  margin: 0px;
+}
+
+#add-site-container {
+  width: 340px;
+  display: flex;
+  align-items: center;
+}
+
+#tabs-time-title {
+  margin-bottom: 16px;
+  padding: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#tabs-time-title::after {
+  content: "\002B";
+}
+
+.active#tabs-time-title::after {
+  content: "\2212";
+}
+
+#tabs-time {
+  padding: 0px 0px 16px 0px;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  gap: 8px;
+}
+
+.date-div,
+#all-times-div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#all-times-div {
+  font-size: 18px;
+}
+
+.tabs-time-site {
+  font-variant: normal;
+  font-size: 12px;
+  display: flex;
+}
+
+.tabs-time-site :first-child {
+  width: 88px;
+}
+
+#save-button {
+  margin-bottom: 24px;
+}
