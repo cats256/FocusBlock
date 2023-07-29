@@ -39,7 +39,7 @@ const resetPomodoro = () => {
   cyclesInput.removeEventListener("input", keepCyclesUnchanged);
 
   pomodoroEnabled = false;
-  pomodoroInformation = {};
+  pomodoroInformation = { cyclesTimes: [] };
   chrome.storage.local.set({ pomodoroInformation, pomodoroEnabled });
 };
 

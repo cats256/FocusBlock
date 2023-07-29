@@ -178,7 +178,6 @@ chrome.storage.local.get().then((storage) => {
 
   let pomodoroTimeout;
   const pomodoroTimer = () => {
-    console.log(pomodoroInformation.cyclesTimes);
     const nextTimeIndex = pomodoroInformation.cyclesTimes.findIndex((time) => Date.now() < time);
     if (nextTimeIndex !== -1) {
       chrome.storage.local.set({ focusMode: nextTimeIndex % 2 === 1 });
