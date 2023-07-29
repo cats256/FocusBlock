@@ -132,6 +132,9 @@ chrome.storage.local.get().then((storage) => {
       unblockTimes: {},
       backgroundImage: "icons/dangerous.svg",
       quote: "life begins at the end of your comfort zone",
+      pomodoroInformation: {
+        cyclesTimes: [],
+      },
     });
   }
 });

@@ -170,11 +170,21 @@ window.addEventListener("focus", () => {
 
 chrome.storage.local.get().then((storage) => {
   let siteInBlockList = storage.blockedSites.includes(domain);
-  let { focusMode, backgroundImage, quote } = storage;
+  let { focusMode, backgroundImage, quote, pomodoroInformation } = storage;
   let unblockEndTime = storage.unblockTimes[domain];
 
   let isCurrentlyUnblocked = Date.now() < unblockEndTime;
   let isCurrentlyBlocked;
+
+  let pomodoroTimeout;
+  const pomodoroTimer = () => {
+    console.log(pomodoroInformation.cyclesTimes);
+    const nextTimeIndex = pomodoroInformation.cyclesTimes.findIndex((time) => Date.now() < time);
+    if (nextTimeIndex !== -1) {
+      chrome.storage.local.set({ focusMode: nextTimeIndex % 2 === 1 });
+      pomodoroTimeout = setTimeout(pomodoroTimer, pomodoroInformation.cyclesTimes[nextTimeIndex] - Date.now());
+    }
+  };
 
   if (siteInBlockList && focusMode && !isCurrentlyUnblocked) {
     blockSite(backgroundImage, quote);
@@ -193,6 +203,14 @@ chrome.storage.local.get().then((storage) => {
       focusMode = changes.focusMode.newValue;
     } else if (changes.unblockTimes) {
       unblockEndTime = changes.unblockTimes.newValue[domain];
+    } else if (changes.pomodoroEnabled) {
+      if (changes.pomodoroEnabled.newValue) {
+        pomodoroInformation = changes.pomodoroInformation.newValue;
+        clearTimeout(pomodoroTimeout);
+        pomodoroTimer();
+      } else {
+        chrome.storage.local.set({ focusMode: false });
+      }
     } else if (changes.backgroundImage) {
       backgroundImage = changes.backgroundImage.newValue;
 
@@ -217,4 +235,6 @@ chrome.storage.local.get().then((storage) => {
       isCurrentlyBlocked = false;
     }
   });
+
+  pomodoroTimer();
 });
