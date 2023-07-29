@@ -62,9 +62,11 @@ const changeTime = () => {
 const resumePomodoro = async () => {
   pomodoroTimer = setInterval(changeTime, 100);
 
-  focusMinutesInput.value = focusMinutes;
-  breakMinutesInput.value = breakMinutes;
-  cyclesInput.value = cycles;
+  ({ focusMinutes, breakMinutes, cycles } = pomodoroInformation);
+
+  focusMinutesInput.value = pomodoroInformation.focusMinutes;
+  breakMinutesInput.value = pomodoroInformation.breakMinutes;
+  cyclesInput.value = pomodoroInformation.cycles;
 
   focusMinutesInput.addEventListener("input", keepFocusMinutesUnchanged);
   breakMinutesInput.addEventListener("input", keepBreakMinutesUnchanged);
