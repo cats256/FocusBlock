@@ -88,7 +88,19 @@ button:hover {
 }
 
 #tabs-time-title {
-  margin: 8px 0px;
+  margin-bottom: 16px;
+  padding: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#tabs-time-title::after {
+  content: "\002B";
+}
+
+.active#tabs-time-title::after {
+  content: "\2212";
 }
 
 #tabs-time {
@@ -119,4 +131,8 @@ button:hover {
 
 .tabs-time-site :first-child {
   width: 88px;
+}
+
+#save-button {
+  margin-bottom: 24px;
 }
