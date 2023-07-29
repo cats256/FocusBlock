@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "FocusBlock",
   "version": "1.0.0",
-  "description": "Free, light-weight, and open source chrome extension to block distracting websites and enhance your productivity!",
+  "description": "Lightweight and open source extension to block distracting websites and enhance productivity!",
   "icons": {
     "128": "icons/icon.png"
   },

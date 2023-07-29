@@ -46,6 +46,10 @@ const blockSite = (backgroundImg, quoteParameter) => {
         background-color: rgb(235, 235, 235) !important;
       }
 
+      body {
+        font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+      }
+
       #panel {
         display: flex;
         flex-direction: column;
