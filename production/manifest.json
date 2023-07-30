@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "description": "Lightweight and open source extension to block distracting websites and enhance productivity!",
   "icons": {
-    "128": "icons/icon.png"
+    "1024": "icons/icon.png",
+    "128": "icons/128x128.png"
   },
   "background": {
     "service_worker": "service-worker.js",
