@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "FocusBlock",
+  "name": "FocusBlock: Website Blocker & Pomodoro Timer",
   "version": "1.0.0",
   "description": "Lightweight and open source extension to block distracting websites and enhance productivity!",
   "icons": {
