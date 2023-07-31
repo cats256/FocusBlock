@@ -23,9 +23,9 @@
   "web_accessible_resources": [
     {
       "resources": [
+        "icons/icon.png",
         "icons/lotus.svg",
         "icons/dangerous.svg",
-        "icons/icon.png",
         "font/Inter-Regular.ttf",
         "font/Inter-Medium.ttf"
       ],
