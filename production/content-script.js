@@ -177,7 +177,6 @@ chrome.storage.local.get().then((storage) => {
   let { focusMode, backgroundImage, quote, pomodoroInformation } = storage;
   let unblockEndTime = storage.unblockTimes[domain];
 
-  let isCurrentlyUnblocked = Date.now() < unblockEndTime;
   let isCurrentlyBlocked;
 
   let pomodoroTimeout;
@@ -190,7 +189,7 @@ chrome.storage.local.get().then((storage) => {
   };
 
   if (siteInBlockList && focusMode) {
-    if (isCurrentlyUnblocked) {
+    if (unblockEndTime <= Date.now()) {
       setTimeout(() => {
         blockSite(backgroundImage, quote);
         isCurrentlyBlocked = true;
@@ -219,20 +218,18 @@ chrome.storage.local.get().then((storage) => {
     } else if (changes.backgroundImage) {
       backgroundImage = changes.backgroundImage.newValue;
 
-      if (isCurrentlyBlocked && !isCurrentlyUnblocked) {
+      if (isCurrentlyBlocked && unblockEndTime <= Date.now()) {
         blockSite(backgroundImage, quote);
       }
     } else if (changes.quote) {
       quote = changes.quote.newValue;
 
-      if (isCurrentlyBlocked && !isCurrentlyUnblocked) {
+      if (isCurrentlyBlocked && unblockEndTime <= Date.now()) {
         blockSite(backgroundImage, quote);
       }
     }
 
-    isCurrentlyUnblocked = Date.now() < unblockEndTime;
-
-    if (!isCurrentlyUnblocked) {
+    if (unblockEndTime <= Date.now()) {
       if (siteInBlockList && focusMode && !isCurrentlyBlocked) {
         blockSite(backgroundImage, quote);
         isCurrentlyBlocked = true;
