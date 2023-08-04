@@ -189,14 +189,16 @@ chrome.storage.local.get().then((storage) => {
     }
   };
 
-  if (siteInBlockList && focusMode && !isCurrentlyUnblocked) {
-    blockSite(backgroundImage, quote);
-    isCurrentlyBlocked = true;
-  } else if (siteInBlockList && focusMode) {
-    setTimeout(() => {
+  if (siteInBlockList && focusMode) {
+    if (isCurrentlyUnblocked) {
+      setTimeout(() => {
+        blockSite(backgroundImage, quote);
+        isCurrentlyBlocked = true;
+      }, unblockEndTime - Date.now());
+    } else {
       blockSite(backgroundImage, quote);
       isCurrentlyBlocked = true;
-    }, unblockEndTime - Date.now());
+    }
   }
 
   chrome.storage.onChanged.addListener((changes) => {
@@ -230,12 +232,14 @@ chrome.storage.local.get().then((storage) => {
 
     isCurrentlyUnblocked = Date.now() < unblockEndTime;
 
-    if (siteInBlockList && focusMode && !isCurrentlyBlocked && !isCurrentlyUnblocked) {
-      blockSite(backgroundImage, quote);
-      isCurrentlyBlocked = true;
-    } else if ((!siteInBlockList || !focusMode) && isCurrentlyBlocked && !isCurrentlyUnblocked) {
-      unblockSite();
-      isCurrentlyBlocked = false;
+    if (!isCurrentlyUnblocked) {
+      if (siteInBlockList && focusMode && !isCurrentlyBlocked) {
+        blockSite(backgroundImage, quote);
+        isCurrentlyBlocked = true;
+      } else if ((!siteInBlockList || !focusMode) && isCurrentlyBlocked) {
+        unblockSite();
+        isCurrentlyBlocked = false;
+      }
     }
   });
 
